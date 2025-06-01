@@ -1,0 +1,32 @@
+# config/config.yaml
+
+input:
+  path: sample_data/input/sample_vendor_data.xlsx
+  format: excel  
+  sheet_name: Sheet1
+  delimiter: ","
+  header: true
+
+output:
+  path: output/final_results.csv
+  report: output/report_summary.txt
+
+record_id_column: record_id  
+
+match_columns:
+  - name: Raw_Vendor_Name
+    technique: fuzzy
+    weight: 1   
+
+matchers:
+  use_fuzzy: True
+  use_exact: False
+  use_graph: False
+  use_ml_zingg: False
+
+postprocessing:
+  cluster: False
+  canonical_selection: False
+  llm_validation: False
+
+engine: pandas  # default is pandas, can be 'pyspark' for larger datasets
