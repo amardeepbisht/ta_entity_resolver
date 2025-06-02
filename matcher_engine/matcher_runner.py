@@ -1,7 +1,12 @@
+import sys, os
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
+
 import logging
-from config.config_loader import load_config
+from resolver_config.config_loader import load_config
 from matchers.ml_spark_matcher import run_ml_spark_matcher
 from preprocessor.preprocessor import preprocess_data
+from matchers.fuzzy_matcher import run_fuzzy_matcher
 # from matchers.exact_matcher import run_exact_matcher  # Future
 # from matchers.graph_matcher import run_graph_matcher  # Future
 # from matchers.zingg_matcher import run_zingg_matcher  # Future
@@ -17,14 +22,20 @@ def matcher_runner(df, config, engine="pyspark"):
 
     matchers_config = config.get("matchers", {})
 
-    if matchers_config.get("use_ml_spark_matcher", False):
-        logger.info("Running ML Spark Matcher...")
+    # Fuzzy Matcher (Pandas)
+    if matchers_config.get("use_fuzzy", False):
+        logger.info("Running Fuzzy Matcher...")
+        result_df = run_fuzzy_matcher(df, config)
+        results["fuzzy_matcher"] = result_df
 
-    if engine != "pyspark":
-       raise ValueError("ML Spark Matcher requires engine to be 'pyspark'. Please update your config.")
-    
-    result_df = run_ml_spark_matcher(df, config)
-    results["ml_spark_matcher"] = result_df
+    # ML Spark Matcher (requires PySpark)
+    if matchers_config.get("use_ml_spark_matcher", False):
+        if engine != "pyspark":
+            raise ValueError("ML Spark Matcher requires engine to be 'pyspark'. Please update your config.")
+        logger.info("Running ML Spark Matcher...")
+        result_df = run_ml_spark_matcher(df, config)
+        results["ml_spark_matcher"] = result_df
+
 
     # Future extensions (placeholders):
     # if matchers_config.get("use_exact", False):
@@ -50,14 +61,17 @@ if __name__ == "__main__":
     level=logging.INFO,  
     format='%(asctime)s - %(levelname)s - %(message)s')
 
-    config = load_config("config/config.yaml")
+    config = load_config("resolver_config/config.yaml")
     df = load_input_data(config["input"], engine=config.get("engine", "pandas"))
     df = preprocess_data(df, config)  
 
     print(df.head())
     # print(config)
    
-    matcher_outputs = matcher_runner(df, config)
+    matcher_outputs = matcher_runner(df, config, engine=config.get("engine", "pandas"))
     for name, result_df in matcher_outputs.items():
         print(f"\nMatcher: {name}, Rows: {result_df.count() if hasattr(result_df, 'count') else len(result_df)}")
+    fuzzy_df = matcher_outputs["fuzzy_matcher"]
+    print("=== First 10 matched pairs ===")
+    print(fuzzy_df.head(10).to_string(index=False))
 

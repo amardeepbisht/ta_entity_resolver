@@ -1,0 +1,22 @@
+# Bytecode
+__pycache__/
+*.pyc
+
+# pytest cache
+.pytest_cache/
+
+# Virtual environments
+venv/
+env/
+# or whatever folder you use for venv
+
+# VS Code settings (optional to share or not)
+.vscode/
+
+# IPython history or Jupyter checkpoints
+.ipynb_checkpoints/
+
+# pip/Egg packaging
+*.egg-info/
+dist/
+build/

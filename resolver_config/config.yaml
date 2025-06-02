@@ -9,8 +9,8 @@ input:
   header: true
 
 output:
-  path: output/final_results.csv
-  report: output/report_summary.txt
+  resolved_pairs_path: output/final_results.csv
+  report_path: output/report_summary.txt
 
 record_id_column: record_id  
 
@@ -25,7 +25,7 @@ fields_to_match:
       exact: true
       normalized: true
       phonetic: true
-      similarity_threshold: 0.85
+      similarity_threshold: 0.7
 
 # --- Matcher Toggle ---   
 # Global flags to activate/deactivate specific matchers
@@ -33,8 +33,8 @@ matchers:
   use_exact: false
   use_normalized: false
   use_phonetic: false
-  use_fuzzy: false
-  use_ml_spark_matcher: true
+  use_fuzzy: true
+  use_ml_spark_matcher: false
   use_ml_zingg: false
   use_graph: false
 
@@ -64,7 +64,7 @@ matching_techniques_config:
     password: "password"
 
   ml_based_spark_matcher:
-    enabled: true
+    enabled: false
     weight: 0.8
     checkpoint_dir: dbfs:/tmp/spark_matcher_checkpoints/
 
@@ -115,7 +115,7 @@ postprocessing:
   llm_validation: False
 
 # --- Data Processing Engine ---
-engine: pyspark  # default is pandas, keep 'pyspark' for larger datasets
+engine: pandas  # default is pandas, keep 'pyspark' for larger datasets
 
 
 # --- Logging ---
