@@ -1,5 +1,6 @@
 # config/config.yaml
 
+# --- Input and Output ---
 input:
   path: sample_data/input/sample_vendor_data.xlsx
   format: excel  
@@ -13,20 +14,109 @@ output:
 
 record_id_column: record_id  
 
-match_columns:
+
+# --- Fields to Match ---
+# Each field can specify multiple techniques with weights and thresholds
+fields_to_match:
   - name: Raw_Vendor_Name
-    technique: fuzzy
-    weight: 1   
+    weight: 1.0
+    techniques:
+      fuzzy: true
+      exact: true
+      normalized: true
+      phonetic: true
+      similarity_threshold: 0.85
 
+# --- Matcher Toggle ---   
+# Global flags to activate/deactivate specific matchers
 matchers:
-  use_fuzzy: True
-  use_exact: False
-  use_graph: False
-  use_ml_zingg: False
+  use_exact: false
+  use_normalized: false
+  use_phonetic: false
+  use_fuzzy: false
+  use_ml_spark_matcher: true
+  use_ml_zingg: false
+  use_graph: false
 
+# --- Matching Technique Configuration ---
+matching_techniques_config:
+  # For techniques that have global settings or weights if not overridden by field-specific weights
+  exact_match_weight: 1.0 
+  normalized_match_weight: 0.9
+
+  string_similarity:
+    # Default algorithm if not specified per field (options: "levenshtein", "jaro_winkler")
+    algorithm: jaro_winkler
+    default_threshold: 0.85   # Default threshold if not set per field
+    weight: 0.7
+
+  phonetic_similarity:
+    # Default algorithm (options: "soundex", "metaphone", "nysiis")
+    algorithm: soundex 
+    weight: 0.6
+
+  graph_based:
+    enabled: true  # Set to true to enable Neo4j (requires Neo4j setup)
+    weight: 0.6    # Assign a weight if enabled
+    component_algorithm: connected_components
+    uri: "bolt://localhost:7687"
+    user: "neo4j"
+    password: "password"
+
+  ml_based_spark_matcher:
+    enabled: true
+    weight: 0.8
+    checkpoint_dir: dbfs:/tmp/spark_matcher_checkpoints/
+
+  ml_based_zingg:
+    enabled: false
+    weight: 0.0
+    model_config: zingg_model.conf
+
+
+# --- Ensemble Aggregation ---
+# Method to combine scores from different techniques.
+# Options: "weighted_average", "max_wins", "majority_vote" (majority_vote is more complex)
+aggregation_method: weighted_average
+
+
+# --- LLM Validation ---
+llm_validation:
+  enabled: true
+  # Provider: "openai" (future: "gemini", "anthropic", etc.)
+  provider: "openai"
+  model: "gpt-4o" # or "gpt-3.5-turbo"
+  api_key_env_var: "OPENAI_API_KEY" # Environment variable name for the API key
+  # Validate pairs with an ensemble_score >= this threshold
+  confidence_threshold_for_llm: 0.75
+  # If ensemble_score is very high, consider it a match without LLM
+  auto_match_threshold: 0.95
+  # If ensemble_score is very low, consider it a non-match without LLM
+  auto_non_match_threshold: 0.2
+  # Batch size for sending requests to LLM API (if applicable)
+  batch_size: 10
+  # Prompt template (can be customized if needed, though a default will be used)
+  # prompt_template: |
+  #   Compare the following two records and determine if they refer to the same real-world entity.
+  #   Record 1: {record1_str}
+  #   Record 2: {record2_str}
+  #   Consider all fields provided.
+  #   Respond with only one of the following: YES, NO, or UNCERTAIN.
+  #   Provide a brief explanation for your decision on a new line.
+  #   Example:
+  #   YES
+  #   The names, dates of birth, and addresses are identical.
+
+
+#---- Postprocessing ---
 postprocessing:
   cluster: False
   canonical_selection: False
   llm_validation: False
 
-engine: pandas  # default is pandas, can be 'pyspark' for larger datasets
+# --- Data Processing Engine ---
+engine: pyspark  # default is pandas, keep 'pyspark' for larger datasets
+
+
+# --- Logging ---
+logging_level: "INFO" # DEBUG, INFO, WARNING, ERROR, CRITICAL
