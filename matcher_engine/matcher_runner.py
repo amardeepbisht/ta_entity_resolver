@@ -55,7 +55,7 @@ if __name__ == "__main__":
     df = preprocess_data(df, config)  
 
     print(df.head())
-    print(config)
+    # print(config)
    
     matcher_outputs = matcher_runner(df, config)
     for name, result_df in matcher_outputs.items():
