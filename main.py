@@ -1,8 +1,37 @@
 # main.py
-
+import json
 import sys
 import os
 import logging
+
+# -----------------------------------------------
+#  File Handler Configuration 
+# -----------------------------------------------
+# Create root logger and set level
+logger = logging.getLogger()  
+logger.setLevel(logging.INFO)
+
+# Console handler (prints to stdout)
+console_handler = logging.StreamHandler()
+console_handler.setLevel(logging.INFO)
+
+# File handler: write all logs to output/pipeline.log
+log_dir = "output"
+os.makedirs(log_dir, exist_ok=True)
+file_handler = logging.FileHandler(os.path.join(log_dir, "pipeline.log"), mode="w")
+file_handler.setLevel(logging.INFO)
+
+# Formatter for both handlers
+formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
+console_handler.setFormatter(formatter)
+file_handler.setFormatter(formatter)
+
+# Add handlers to the root logger
+logger.addHandler(console_handler)
+logger.addHandler(file_handler)
+
+# ───────────────────────────────────────────────────────────────────────────────
+
 
 # Ensure project root is on sys.path
 PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
@@ -38,7 +67,7 @@ def main():
     except AttributeError:
         rows = df.count()
         cols = len(df.columns)
-    logger.info(f"Loaded input ({inp['path']}) → {rows} rows, {cols} cols")
+    logger.info(f"Loaded input ({inp['path']}) -> {rows} rows, {cols} cols")
 
     # 4) Preprocess (this also saves output/preprocessed_data.csv)
     df_clean = preprocess_data(df, config)
@@ -46,7 +75,7 @@ def main():
         pre_rows, _ = df_clean.shape
     except AttributeError:
         pre_rows = df_clean.count()
-    logger.info(f"After preprocessing → {pre_rows} rows remain")
+    logger.info(f"After preprocessing -> {pre_rows} rows remain")
 
     # 5) Run all enabled matchers (e.g. fuzzy)
     results = matcher_runner(df_clean, config, engine=config.get("engine", "pandas"))
@@ -58,6 +87,48 @@ def main():
 
     # 6) Ensemble all matcher outputs into a final score
     final_df = ensemble_scores(results, config)
+
+    # -----------------------------------------------
+    # 6a) Export JSON-lines for LLM validation
+    # -----------------------------------------------
+    # Build a lookup: record_id -> full preprocessed row (dict of all fields)
+    record_id_col = config.get("record_id_column", "record_id")
+    lookup = df_clean.set_index(record_id_col).to_dict(orient="index")
+
+    # Decide where to save the JSONL
+    llm_json_path = os.path.join(os.path.dirname(config["output"]["resolved_pairs_path"]),
+                                 "for_llm.jsonl")
+    os.makedirs(os.path.dirname(llm_json_path), exist_ok=True)
+
+    with open(llm_json_path, "w", encoding="utf-8") as f_json:
+        for _, row in final_df.iterrows():
+            # Grab the full record details from df_clean
+            r1 = lookup.get(row["record1_id"], {})
+            r2 = lookup.get(row["record2_id"], {})
+
+            # Collect all scores into a nested dict
+            scores = {
+                key: float(row[key])
+                for key in row.index
+                if key.endswith("_score")
+            }
+
+            # Metadata just tracks IDs
+            metadata = {
+                "record1_id": str(row["record1_id"]),
+                "record2_id": str(row["record2_id"])
+            }
+
+            payload = {
+                "record1": r1,
+                "record2": r2,
+                "scores": scores,
+                "metadata": metadata
+            }
+            f_json.write(json.dumps(payload) + "\n")
+
+    logger.info(f"Saved {len(final_df)} LLM-input JSON lines to {llm_json_path}")
+
 
     # 7) Save the final ensembled pairs (use config["output"]["path"])
     out_pairs = config["output"]["resolved_pairs_path"]

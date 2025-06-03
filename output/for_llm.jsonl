@@ -1,0 +1,9 @@
+{"record1": {"Raw_Vendor_Name": "uber technologies inc."}, "record2": {"Raw_Vendor_Name": "uber technologies"}, "scores": {"final_score": 0.7727, "fuzzy_score": 0.7727}, "metadata": {"record1_id": "1", "record2_id": "2"}}
+{"record1": {"Raw_Vendor_Name": "uber technologies inc."}, "record2": {"Raw_Vendor_Name": "uber technologies incorporated"}, "scores": {"final_score": 0.7, "fuzzy_score": 0.7}, "metadata": {"record1_id": "1", "record2_id": "3"}}
+{"record1": {"Raw_Vendor_Name": "marriott intl"}, "record2": {"Raw_Vendor_Name": "marriott int'l"}, "scores": {"final_score": 0.9286, "fuzzy_score": 0.9286}, "metadata": {"record1_id": "7", "record2_id": "8"}}
+{"record1": {"Raw_Vendor_Name": "marriott intl"}, "record2": {"Raw_Vendor_Name": "marriott hotel"}, "scores": {"final_score": 0.7857, "fuzzy_score": 0.7857}, "metadata": {"record1_id": "7", "record2_id": "9"}}
+{"record1": {"Raw_Vendor_Name": "marriott int'l"}, "record2": {"Raw_Vendor_Name": "marriott hotel"}, "scores": {"final_score": 0.7857, "fuzzy_score": 0.7857}, "metadata": {"record1_id": "8", "record2_id": "9"}}
+{"record1": {"Raw_Vendor_Name": "delta air lines inc"}, "record2": {"Raw_Vendor_Name": "delta airlines"}, "scores": {"final_score": 0.7368, "fuzzy_score": 0.7368}, "metadata": {"record1_id": "16", "record2_id": "17"}}
+{"record1": {"Raw_Vendor_Name": "delta air lines inc"}, "record2": {"Raw_Vendor_Name": "delta airlines ltd."}, "scores": {"final_score": 0.7368, "fuzzy_score": 0.7368}, "metadata": {"record1_id": "16", "record2_id": "19"}}
+{"record1": {"Raw_Vendor_Name": "delta airlines"}, "record2": {"Raw_Vendor_Name": "delta airlines ltd."}, "scores": {"final_score": 0.7368, "fuzzy_score": 0.7368}, "metadata": {"record1_id": "17", "record2_id": "19"}}
+{"record1": {"Raw_Vendor_Name": "delta airlines"}, "record2": {"Raw_Vendor_Name": "delta.airlines"}, "scores": {"final_score": 0.9286, "fuzzy_score": 0.9286}, "metadata": {"record1_id": "17", "record2_id": "20"}}

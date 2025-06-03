@@ -12,126 +12,88 @@ class EnsembleError(Exception):
 
 def ensemble_scores(match_results: Dict[str, pd.DataFrame], config: Dict[str, Any]) -> pd.DataFrame:
     """
-    Combine individual matcher outputs into a final_score using boss’s logic:
-      - Gather only non-zero technique scores for each pair.
-      - Apply either weighted_average or max_wins based on config.
-
-    match_results: {
-      "exact_matcher": DataFrame with columns record1_id, record2_id, exact_match,
-      "normalized_matcher": DataFrame with record1_id, record2_id, normalized_match,
-      "phonetic_matcher": DataFrame with record1_id, record2_id, phonetic_match,
-      "fuzzy_matcher": DataFrame with record1_id, record2_id, fuzzy_score
-      # etc.
-    }
-
-    config["matching_techniques_config"] must include:
-      - exact_match_weight
-      - normalized_match_weight
-      - phonetic_similarity.weight
-      - string_similarity.weight
-      - graph_based.weight (if used)
-      - ml_based_dedupe.weight (if used)
-    config["aggregation_method"] is either "weighted_average" or "max_wins"
+    Combine matcher outputs using configured aggregation logic (weighted_average or max_wins),
+    and apply a threshold to determine is_match.
     """
     method = config.get("aggregation_method", "weighted_average")
-    tech_cfg = config.get("matching_techniques_config", {})
+    threshold = config.get("ensemble_threshold", 0.75)
+    matcher_weights = config.get("weights", {})
 
-    # Build a dict: (id1, id2) → { exact_score, normalized_score, phonetic_score, similarity_score, graph_score, ml_score }
+    logger.info(f"Aggregation method: {method}, Threshold: {threshold}")
+    logger.info(f"Matcher Weights: {matcher_weights}")
+
+    all_keys = set()
+    score_columns = {}
+
+    # Step 1: Collect all unique (record1_id, record2_id) pairs and matcher scores
     pair_scores: Dict[tuple, Dict[str, float]] = {}
 
     for matcher_name, df in match_results.items():
+        score_col = None
+        for col in df.columns:
+            if col.endswith("_score"):
+                score_col = col
+                break
+        if not score_col:
+            logger.warning(f"Matcher {matcher_name} has no score column ending with '_score'. Skipping.")
+            continue
+
+        score_columns[matcher_name] = score_col
+
         for _, row in df.iterrows():
             id1, id2 = row["record1_id"], row["record2_id"]
             key = tuple(sorted((id1, id2)))
+            all_keys.add(key)
+
             if key not in pair_scores:
-                pair_scores[key] = {
-                    "exact_score": 0.0,
-                    "normalized_score": 0.0,
-                    "phonetic_score": 0.0,
-                    "similarity_score": 0.0,
-                    "graph_score": 0.0,
-                    "ml_score": 0.0,
-                }
+                pair_scores[key] = {}
 
-            if matcher_name == "fuzzy_matcher":
-                pair_scores[key]["similarity_score"] = float(row.get("fuzzy_score", 0.0))
-            elif matcher_name == "exact_matcher":
-                pair_scores[key]["exact_score"] = 1.0
-            elif matcher_name == "normalized_matcher":
-                pair_scores[key]["normalized_score"] = 1.0
-            elif matcher_name == "phonetic_matcher":
-                pair_scores[key]["phonetic_score"] = 1.0
-            elif matcher_name == "graph_matcher":
-                pair_scores[key]["graph_score"] = float(row.get("graph_score", 0.0))
-            elif matcher_name == "ml_spark_matcher":
-                pair_scores[key]["ml_score"] = float(row.get("ml_score", 0.0))
-            # Add other matcher mappings as needed
+            pair_scores[key][matcher_name] = float(row[score_col])
 
+    logger.info(f"Collected {len(all_keys)} unique record pairs from matcher outputs.")
+
+    # Step 2: Compute final score
     rows = []
     for (id1, id2), scores in pair_scores.items():
-        scores_present = []
-        weights_present = []
+        values = []
+        weights = []
 
-        # Exact
-        es = scores["exact_score"]
-        if es > 0:
-            scores_present.append(es)
-            weights_present.append(tech_cfg.get("exact_match_weight", 1.0))
+        for matcher_name, score_col in score_columns.items():
+            score = scores.get(matcher_name, None)
+            weight = matcher_weights.get(matcher_name, 0.0)
+            if score is not None:
+                values.append(score)
+                weights.append(weight)
 
-        # Normalized
-        ns = scores["normalized_score"]
-        if ns > 0:
-            scores_present.append(ns)
-            weights_present.append(tech_cfg.get("normalized_match_weight", 0.9))
-
-        # Similarity (fuzzy)
-        ss = scores["similarity_score"]
-        if ss > 0:
-            scores_present.append(ss)
-            weights_present.append(tech_cfg.get("string_similarity", {}).get("weight", 0.7))
-
-        # Phonetic
-        ps = scores["phonetic_score"]
-        if ps > 0:
-            scores_present.append(ps)
-            weights_present.append(tech_cfg.get("phonetic_similarity", {}).get("weight", 0.6))
-
-        # Graph
-        gs = scores["graph_score"]
-        if gs > 0 and tech_cfg.get("graph_based", {}).get("enabled", False):
-            scores_present.append(gs)
-            weights_present.append(tech_cfg.get("graph_based", {}).get("weight", 0.0))
-
-        # ML
-        ms = scores["ml_score"]
-        if ms > 0 and tech_cfg.get("ml_based_dedupe", {}).get("enabled", False):
-            scores_present.append(ms)
-            weights_present.append(tech_cfg.get("ml_based_dedupe", {}).get("weight", 0.0))
-
-        if not scores_present:
-            final = 0.0
+        if not values:
+            final_score = 0.0
+            logger.debug(f"No scores for pair ({id1}, {id2}), setting final_score = 0.0")
         elif method == "weighted_average":
-            # Only use weights corresponding to scores > 0
-            weighted_sum = np.dot(scores_present, weights_present)
-            total_weight = sum(weights_present)
-            final = weighted_sum / total_weight if total_weight else 0.0
+            weighted_sum = np.dot(values, weights)
+            total_weight = sum(weights)
+            final_score = weighted_sum / total_weight if total_weight else 0.0
         elif method == "max_wins":
-            final = float(max(scores_present))
+            final_score = max(values)
         else:
             raise EnsembleError(f"Unsupported aggregation method: {method}")
 
-        rows.append({
+        is_match = final_score >= threshold
+        logger.debug(f"Pair ({id1}, {id2}) → Final Score: {final_score:.4f}, Is Match: {is_match}")
+
+        row = {
             "record1_id": id1,
             "record2_id": id2,
-            "exact_score": scores["exact_score"],
-            "normalized_score": scores["normalized_score"],
-            "phonetic_score": scores["phonetic_score"],
-            "similarity_score": scores["similarity_score"],
-            "graph_score": scores["graph_score"],
-            "ml_score": scores["ml_score"],
-            "final_score": round(final, 4)
-        })
+            "final_score": round(final_score, 4),
+            "is_match": is_match
+        }
+
+        for matcher_name in score_columns:
+            col_name = score_columns[matcher_name]
+            row[col_name] = scores.get(matcher_name, np.nan)
+
+        rows.append(row)
 
     result_df = pd.DataFrame(rows)
-    logger.info(f"Ensembled {len(result_df)} pairs using '{method}'.")
+    logger.info(f"Generated ensemble output with {len(result_df)} rows.")
+
     return result_df

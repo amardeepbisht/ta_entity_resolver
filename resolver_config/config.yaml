@@ -9,21 +9,20 @@ input:
   header: true
 
 output:
-  fuzzy_matcher_path:   output/fuzzy_matcher.csv
+  fuzzy_matcher_path: output/fuzzy_matcher.csv
   ml_spark_matcher_path: output/ml_spark_matcher.csv
-  resolved_pairs_path:   output/final_results.csv
-  report_path:           output/report_summary.txt
   resolved_pairs_path: output/final_results.csv
   report_path: output/report_summary.txt
-
+  
 record_id_column: record_id  
 
 
 # --- Fields to Match ---
 # Each field can specify multiple techniques with weights and thresholds
+#Prioritize certain fields when computing match score per record pair
 fields_to_match:
   - name: Raw_Vendor_Name
-    weight: 1.0
+    weight: 1.0 
     techniques:
       fuzzy: true
       exact: true
@@ -43,25 +42,25 @@ matchers:
   use_graph: false
 
 # --- Matching Technique Configuration ---
+# For techniques that have global settings or weights if not overridden by field-specific weights
 matching_techniques_config:
-  # For techniques that have global settings or weights if not overridden by field-specific weights
   exact_match_weight: 1.0 
   normalized_match_weight: 0.9
 
   string_similarity:
-    # Default algorithm if not specified per field (options: "levenshtein", "jaro_winkler")
-    algorithm: jaro_winkler
+    # Default algorithm if not specified per field (options: "levenshtein", "jaro_winkler", "token_set_ratio")
+    algorithm: levenshtein
     default_threshold: 0.85   # Default threshold if not set per field
-    weight: 0.7
+    #weight: 0.7
 
   phonetic_similarity:
     # Default algorithm (options: "soundex", "metaphone", "nysiis")
     algorithm: soundex 
-    weight: 0.6
+    #weight: 0.6
 
   graph_based:
     enabled: true  # Set to true to enable Neo4j (requires Neo4j setup)
-    weight: 0.6    # Assign a weight if enabled
+    #weight: 0.6    # Assign a weight if enabled
     component_algorithm: connected_components
     uri: "bolt://localhost:7687"
     user: "neo4j"
@@ -69,12 +68,12 @@ matching_techniques_config:
 
   ml_based_spark_matcher:
     enabled: false
-    weight: 0.8
+    #weight: 0.8
     checkpoint_dir: dbfs:/tmp/spark_matcher_checkpoints/
 
   ml_based_zingg:
     enabled: false
-    weight: 0.0
+    #weight: 0.0
     model_config: zingg_model.conf
 
 
@@ -82,7 +81,11 @@ matching_techniques_config:
 # Method to combine scores from different techniques.
 # Options: "weighted_average", "max_wins", "majority_vote" (majority_vote is more complex)
 aggregation_method: weighted_average
-
+ensemble_threshold: 0.75
+weights:
+  fuzzy_matcher: 0.4
+  spark_matcher: 0.3
+  graph_matcher: 0.3
 
 # --- LLM Validation ---
 llm_validation:

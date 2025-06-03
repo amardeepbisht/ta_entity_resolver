@@ -1,0 +1,21 @@
+2025-06-03 21:01:43,870 - INFO - Loading configuration from d:\MyFiles\ER\ta_entity_resolver\resolver_config\config.yaml
+2025-06-03 21:01:43,877 - INFO - Configuration loaded successfully
+2025-06-03 21:01:43,878 - INFO - Starting orchestration in main.py
+2025-06-03 21:01:43,878 - INFO - Loading data from sample_data/input/sample_vendor_data.xlsx using engine: pandas and format: excel
+2025-06-03 21:01:44,529 - INFO - Pandas loaded file successfully with shape: (20, 1)
+2025-06-03 21:01:44,530 - INFO - Loaded input (sample_data/input/sample_vendor_data.xlsx) -> 20 rows, 1 cols
+2025-06-03 21:01:44,563 - INFO - Saved preprocessed data to output\preprocessed_data.csv
+2025-06-03 21:01:44,564 - INFO - After preprocessing -> 20 rows remain
+2025-06-03 21:01:44,564 - INFO - Running Fuzzy Matcher...
+2025-06-03 21:01:44,564 - INFO - Running fuzzy matcher...
+2025-06-03 21:01:44,565 - INFO - Using algorithm 'levenshtein' with fields: [('Raw_Vendor_Name', 0.7, 1.0)]
+2025-06-03 21:01:44,572 - INFO - Completed 190 comparisons.
+2025-06-03 21:01:44,572 - INFO - Fuzzy matcher found 9 matched pairs; 181 pairs below threshold.
+2025-06-03 21:01:44,595 - INFO - Saved fuzzy matcher output to output\fuzzy_matcher_levenshtein.csv
+2025-06-03 21:01:44,595 - INFO - Aggregation method: weighted_average, Threshold: 0.75
+2025-06-03 21:01:44,596 - INFO - Matcher Weights: {'fuzzy_matcher': 0.4, 'spark_matcher': 0.3, 'graph_matcher': 0.3}
+2025-06-03 21:01:44,597 - INFO - Collected 9 unique record pairs from matcher outputs.
+2025-06-03 21:01:44,599 - INFO - Generated ensemble output with 9 rows.
+2025-06-03 21:01:44,627 - INFO - Saved 9 LLM-input JSON lines to output\for_llm.jsonl
+2025-06-03 21:01:44,671 - INFO - Saved final ensembled pairs to output/final_results.csv (9 rows)
+2025-06-03 21:01:44,691 - INFO - Saved full summary report to output/report_summary.txt
