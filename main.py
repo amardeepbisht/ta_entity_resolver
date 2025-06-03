@@ -9,6 +9,7 @@ PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 if PROJECT_ROOT not in sys.path:
     sys.path.insert(0, PROJECT_ROOT)
 
+from pyspark.sql import DataFrame as SparkDF
 from resolver_config.config_loader import load_config
 from data_loader.load_data import load_input_data
 from preprocessor.preprocessor import preprocess_data
@@ -27,37 +28,50 @@ def main():
     logger = logging.getLogger(__name__)
     logger.info("Starting orchestration in main.py")
 
-    # 3) Load input data (Pandas)
+    # 3) Load input data (Pandas or PySpark)
     inp = config["input"]
     engine = config.get("engine", "pandas")
     df = load_input_data(inp, engine=engine)
-    logger.info(f"Loaded input ({inp['path']}) → {df.shape[0]} rows, {df.shape[1]} cols")
+    # Handle Pandas vs. Spark DataFrame when logging shape
+    try:
+        rows, cols = df.shape
+    except AttributeError:
+        rows = df.count()
+        cols = len(df.columns)
+    logger.info(f"Loaded input ({inp['path']}) → {rows} rows, {cols} cols")
 
     # 4) Preprocess (this also saves output/preprocessed_data.csv)
     df_clean = preprocess_data(df, config)
-    logger.info(f"After preprocessing → {df_clean.shape[0]} rows remain")
+    try:
+        pre_rows, _ = df_clean.shape
+    except AttributeError:
+        pre_rows = df_clean.count()
+    logger.info(f"After preprocessing → {pre_rows} rows remain")
 
     # 5) Run all enabled matchers (e.g. fuzzy)
-    #    Make sure we assign to `results` exactly, not `rresults` or any other name
     results = matcher_runner(df_clean, config, engine=config.get("engine", "pandas"))
+
+    # Convert any Spark DataFrame into Pandas before ensembling:
+    for name, df in results.items():
+        if isinstance(df, SparkDF):
+            results[name] = df.toPandas()
 
     # 6) Ensemble all matcher outputs into a final score
     final_df = ensemble_scores(results, config)
 
-    # 7) Save the final ensembled pairs
+    # 7) Save the final ensembled pairs (use config["output"]["path"])
     out_pairs = config["output"]["resolved_pairs_path"]
     os.makedirs(os.path.dirname(out_pairs), exist_ok=True)
     final_df.to_csv(out_pairs, index=False)
     logger.info(f"Saved final ensembled pairs to {out_pairs} ({len(final_df)} rows)")
 
-    # 8) Write a simple report
+    # 8) Write a simple report (use config["output"]["report"])
     report_path = config["output"]["report_path"]
-    with open(report_path, "w") as f:
-        f.write(f"Total final pairs: {len(final_df)}\n")
-        f.write("Top 10 pairs by final_score:\n")
-        top10 = final_df.sort_values("final_score", ascending=False).head(10)
-        f.write(top10.to_string(index=False))
-    logger.info(f"Saved summary report to {report_path}")
+    with open(report_path, "w", encoding="utf-8") as f:
+        f.write(f"Total final pairs: {len(final_df)}\n\n")
+        f.write("All matched pairs (with all columns):\n")
+        f.write(final_df.to_string(index=False))
+    logger.info(f"Saved full summary report to {report_path}")
 
 
 if __name__ == "__main__":

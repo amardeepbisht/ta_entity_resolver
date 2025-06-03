@@ -57,7 +57,14 @@ def load_input_data(file_config: dict, engine: str = "pandas"):
         if not spark_available:
             raise ImportError("PySpark is not installed. Please install it to use the 'pyspark' engine.")
 
-        spark = SparkSession.builder.appName("EntityResolver").getOrCreate()
+        # Add spark-excel package so Spark can read Excel files
+        spark = (
+            SparkSession
+                .builder
+                .appName("EntityResolver")
+                .config("spark.jars.packages", "com.crealytics:spark-excel_2.12:0.13.5")
+                .getOrCreate()
+        )
 
         try:
             if file_format == "csv":

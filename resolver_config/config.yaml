@@ -9,6 +9,10 @@ input:
   header: true
 
 output:
+  fuzzy_matcher_path:   output/fuzzy_matcher.csv
+  ml_spark_matcher_path: output/ml_spark_matcher.csv
+  resolved_pairs_path:   output/final_results.csv
+  report_path:           output/report_summary.txt
   resolved_pairs_path: output/final_results.csv
   report_path: output/report_summary.txt
 
