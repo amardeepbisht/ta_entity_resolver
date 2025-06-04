@@ -8,6 +8,7 @@ __pycache__/
 # Virtual environments
 venv/
 env/
+.env
 # or whatever folder you use for venv
 
 # VS Code settings (optional to share or not)
@@ -22,4 +23,4 @@ dist/
 build/
 
 # output files 
-output/
+#output/

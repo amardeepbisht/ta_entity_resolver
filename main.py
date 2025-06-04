@@ -3,6 +3,17 @@ import json
 import sys
 import os
 import logging
+import time
+import pandas as pd
+from resolver_config.config_loader import load_config  
+from postprocessing.llm_validator import (
+    load_config   as load_llm_config,
+    initialize_llm_client,
+    read_jsonl_file,
+    call_llm_and_parse_response
+)
+from utilities.file_utils import write_json_to_csv
+
 
 # -----------------------------------------------
 #  File Handler Configuration 
@@ -44,7 +55,9 @@ from data_loader.load_data import load_input_data
 from preprocessor.preprocessor import preprocess_data
 from matcher_engine.matcher_runner import matcher_runner
 from postprocessing.ensembler import ensemble_scores
+from postprocessing.llm_validator import run_llm_validation
 
+start_time = time.time()
 
 def main():
     # 1) Load configuration
@@ -68,6 +81,7 @@ def main():
         rows = df.count()
         cols = len(df.columns)
     logger.info(f"Loaded input ({inp['path']}) -> {rows} rows, {cols} cols")
+    logger.info(f"Input loading completed in {time.time() - start_time:.2f} seconds")
 
     # 4) Preprocess (this also saves output/preprocessed_data.csv)
     df_clean = preprocess_data(df, config)
@@ -76,6 +90,7 @@ def main():
     except AttributeError:
         pre_rows = df_clean.count()
     logger.info(f"After preprocessing -> {pre_rows} rows remain")
+    logger.info(f"Preprocessing completed in {time.time() - start_time:.2f} seconds")
 
     # 5) Run all enabled matchers (e.g. fuzzy)
     results = matcher_runner(df_clean, config, engine=config.get("engine", "pandas"))
@@ -84,6 +99,7 @@ def main():
     for name, df in results.items():
         if isinstance(df, SparkDF):
             results[name] = df.toPandas()
+    logger.info(f"Matcher execution completed in {time.time() - start_time:.2f} seconds")
 
     # 6) Ensemble all matcher outputs into a final score
     final_df = ensemble_scores(results, config)
@@ -128,7 +144,7 @@ def main():
             f_json.write(json.dumps(payload) + "\n")
 
     logger.info(f"Saved {len(final_df)} LLM-input JSON lines to {llm_json_path}")
-
+    logger.info(f"Ensembling completed in {time.time() - start_time:.2f} seconds")
 
     # 7) Save the final ensembled pairs (use config["output"]["path"])
     out_pairs = config["output"]["resolved_pairs_path"]
@@ -143,6 +159,31 @@ def main():
         f.write("All matched pairs (with all columns):\n")
         f.write(final_df.to_string(index=False))
     logger.info(f"Saved full summary report to {report_path}")
+
+
+    # Step: Run LLM Validation (if enabled in config)
+    if config.get("llm_validation", {}).get("enabled", False):
+        logger.info("Running LLM Validation on final matched pairs...")
+        validated_results = run_llm_validation(config)
+
+        # write to output file
+        validated_output_path = config["output"].get("llm_validated_results_path", "output/llm_validated_results.jsonl")
+        validated_output_path_csv = config["output"].get("llm_validated_csv_path", "output/llm_validated_results.csv")
+
+        with open(validated_output_path, "w", encoding="utf-8") as f_out:
+            for item in validated_results:
+                f_out.write(json.dumps(item, ensure_ascii=False) + "\n")
+        
+        logger.info(f"LLM validated results (JSON) written to: {validated_output_path}")
+
+        # Write the validated results to CSV
+        write_json_to_csv(validated_results, validated_output_path_csv)
+
+        logger.info(f"LLM validated results (CSV) written to: {validated_output_path_csv}")
+        
+        logger.info(f"LLM validation completed in {time.time() - start_time:.2f} seconds")
+    else:
+        logger.info("LLM Validation is disabled in config. Skipping.")
 
 
 if __name__ == "__main__":

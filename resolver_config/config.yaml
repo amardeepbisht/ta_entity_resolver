@@ -1,9 +1,9 @@
-# config/config.yaml
+# resolver_config/config.yaml
 
 # --- Input and Output ---
 input:
-  path: sample_data/input/sample_vendor_data.xlsx
-  format: excel  
+  path: sample_data/input/sample_vendor_data.xlsx #sample_data/input/sample_vendor_data.xlsx
+  format: excel  #csv
   sheet_name: Sheet1
   delimiter: ","
   header: true
@@ -13,54 +13,53 @@ output:
   ml_spark_matcher_path: output/ml_spark_matcher.csv
   resolved_pairs_path: output/final_results.csv
   report_path: output/report_summary.txt
+  llm_validated_results_path: output/llm_validated_results.jsonl
+  llm_validated_csv_path: output/llm_validated_results.csv
   
 record_id_column: record_id  
 
 
 # --- Fields to Match ---
 # Each field can specify multiple techniques with weights and thresholds
-#Prioritize certain fields when computing match score per record pair
+# Prioritize certain fields when computing match score per record pair
 fields_to_match:
   - name: Raw_Vendor_Name
     weight: 1.0 
     techniques:
-      fuzzy: true
       exact: true
-      normalized: true
-      phonetic: true
-      similarity_threshold: 0.7
+    similarity_threshold: 0.8   #per‐field cutoff for accepting a match in the fuzzy matcher
+  - name: Raw_Vendor_Name
+    weight: 1.0 
+    techniques:
+      fuzzy: true
+  
 
 # --- Matcher Toggle ---   
 # Global flags to activate/deactivate specific matchers
 matchers:
-  use_exact: false
+  use_fuzzy: true
+  use_exact: true
   use_normalized: false
   use_phonetic: false
-  use_fuzzy: true
   use_ml_spark_matcher: false
   use_ml_zingg: false
-  use_graph: false
+  use_graph: true
 
 # --- Matching Technique Configuration ---
-# For techniques that have global settings or weights if not overridden by field-specific weights
 matching_techniques_config:
-  exact_match_weight: 1.0 
-  normalized_match_weight: 0.9
-
   string_similarity:
-    # Default algorithm if not specified per field (options: "levenshtein", "jaro_winkler", "token_set_ratio")
-    algorithm: levenshtein
-    default_threshold: 0.85   # Default threshold if not set per field
-    #weight: 0.7
+    algorithms:
+      levenshtein: true
+      jaro_winkler: true
+      token_set_ratio: true
+    default_threshold: 0.85   #fallback similarity cutoff when a field does not specify its own threshold
 
   phonetic_similarity:
     # Default algorithm (options: "soundex", "metaphone", "nysiis")
     algorithm: soundex 
-    #weight: 0.6
 
   graph_based:
     enabled: true  # Set to true to enable Neo4j (requires Neo4j setup)
-    #weight: 0.6    # Assign a weight if enabled
     component_algorithm: connected_components
     uri: "bolt://localhost:7687"
     user: "neo4j"
@@ -68,51 +67,83 @@ matching_techniques_config:
 
   ml_based_spark_matcher:
     enabled: false
-    #weight: 0.8
     checkpoint_dir: dbfs:/tmp/spark_matcher_checkpoints/
 
   ml_based_zingg:
     enabled: false
-    #weight: 0.0
     model_config: zingg_model.conf
 
 
 # --- Ensemble Aggregation ---
-# Method to combine scores from different techniques.
-# Options: "weighted_average", "max_wins", "majority_vote" (majority_vote is more complex)
-aggregation_method: weighted_average
-ensemble_threshold: 0.75
+aggregation_method: weighted_average # Options: "weighted_average", "max_wins", "majority_vote" (majority_vote is more complex)
+ensemble_threshold: 0.75    # final score cutoff for determining a match
 weights:
   fuzzy_matcher: 0.4
   spark_matcher: 0.3
   graph_matcher: 0.3
 
+# add only if you want advanced logic, if set to false, then fall back to  default
+use_advanced_ensemble: false    
+
+#sum of these values should equal weights.fuzzy_matcher; if not, code will log and fallback)
+fuzzy_sub_weights:
+  levenshtein: 0.13
+  jaro_winkler: 0.13
+  token_set_ratio: 0.14
+
+# Used if `aggregation_method: majority_vote`, you may specify how many matchers must vote “yes.”
+required_votes: 2
+
+
+
+
 # --- LLM Validation ---
+# Azure OpenAI Service Configuration
+azure_openai:
+  # Your deployed model name (corresponds to 'open_ai_engine')
+  deployment_name: "gpt-4o-mini"
+  
+  # Your Azure OpenAI endpoint URL (corresponds to 'open_ai_host')
+  endpoint: "https://openai-datafabric-dev-001.openai.azure.com/"
+  
+  # The environment variable name that holds your API key.
+  # It's highly recommended to use an environment variable for the key, not hardcode it here.
+  #api_key_env_var: "AZURE_OPENAI_API_KEY"
+  api_key_env_var : "AZURE_OPENAI_API_KEY" 
+  
+  # The API version required for Azure OpenAI.
+  api_version: "2024-02-01"
+  
+  # Optional: Controls the randomness of the LLM's output. 0.0 for deterministic.
+  temperature: 0.0
+  
+  # Optional: Max tokens the LLM can generate in its response.
+  max_tokens: 200
+
+# Input file path
+input_data:
+  # Path to your JSONL input file relative to where the script is run
+  file_path: "output/for_llm.jsonl" 
+
+
+# General LLM validation logic
 llm_validation:
   enabled: true
-  # Provider: "openai" (future: "gemini", "anthropic", etc.)
-  provider: "openai"
-  model: "gpt-4o" # or "gpt-3.5-turbo"
-  api_key_env_var: "OPENAI_API_KEY" # Environment variable name for the API key
-  # Validate pairs with an ensemble_score >= this threshold
-  confidence_threshold_for_llm: 0.75
-  # If ensemble_score is very high, consider it a match without LLM
-  auto_match_threshold: 0.95
-  # If ensemble_score is very low, consider it a non-match without LLM
-  auto_non_match_threshold: 0.2
-  # Batch size for sending requests to LLM API (if applicable)
-  batch_size: 10
-  # Prompt template (can be customized if needed, though a default will be used)
-  # prompt_template: |
-  #   Compare the following two records and determine if they refer to the same real-world entity.
-  #   Record 1: {record1_str}
-  #   Record 2: {record2_str}
-  #   Consider all fields provided.
-  #   Respond with only one of the following: YES, NO, or UNCERTAIN.
-  #   Provide a brief explanation for your decision on a new line.
-  #   Example:
-  #   YES
-  #   The names, dates of birth, and addresses are identical.
+  
+  # Validate pairs with a 'final_score' >= this threshold.
+  # LLM will only be called for scores between auto_non_match_threshold and auto_match_threshold.
+  confidence_threshold_for_llm: 0.70 
+  
+  # If 'final_score' is very high, consider it a match without LLM call.
+  auto_match_threshold: 0.95 
+  
+  # If 'final_score' is very low, consider it a non-match without LLM call.
+  auto_non_match_threshold: 0.2 
+  
+  # Optional: Log the full raw LLM response content for debugging purposes.
+  log_raw_llm_response: false
+
+
 
 
 #---- Postprocessing ---
