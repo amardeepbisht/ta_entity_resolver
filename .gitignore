@@ -20,3 +20,6 @@ env/
 *.egg-info/
 dist/
 build/
+
+# output files 
+output/
