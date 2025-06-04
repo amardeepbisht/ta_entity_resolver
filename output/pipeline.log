@@ -1,21 +1,75 @@
-2025-06-03 21:01:43,870 - INFO - Loading configuration from d:\MyFiles\ER\ta_entity_resolver\resolver_config\config.yaml
-2025-06-03 21:01:43,877 - INFO - Configuration loaded successfully
-2025-06-03 21:01:43,878 - INFO - Starting orchestration in main.py
-2025-06-03 21:01:43,878 - INFO - Loading data from sample_data/input/sample_vendor_data.xlsx using engine: pandas and format: excel
-2025-06-03 21:01:44,529 - INFO - Pandas loaded file successfully with shape: (20, 1)
-2025-06-03 21:01:44,530 - INFO - Loaded input (sample_data/input/sample_vendor_data.xlsx) -> 20 rows, 1 cols
-2025-06-03 21:01:44,563 - INFO - Saved preprocessed data to output\preprocessed_data.csv
-2025-06-03 21:01:44,564 - INFO - After preprocessing -> 20 rows remain
-2025-06-03 21:01:44,564 - INFO - Running Fuzzy Matcher...
-2025-06-03 21:01:44,564 - INFO - Running fuzzy matcher...
-2025-06-03 21:01:44,565 - INFO - Using algorithm 'levenshtein' with fields: [('Raw_Vendor_Name', 0.7, 1.0)]
-2025-06-03 21:01:44,572 - INFO - Completed 190 comparisons.
-2025-06-03 21:01:44,572 - INFO - Fuzzy matcher found 9 matched pairs; 181 pairs below threshold.
-2025-06-03 21:01:44,595 - INFO - Saved fuzzy matcher output to output\fuzzy_matcher_levenshtein.csv
-2025-06-03 21:01:44,595 - INFO - Aggregation method: weighted_average, Threshold: 0.75
-2025-06-03 21:01:44,596 - INFO - Matcher Weights: {'fuzzy_matcher': 0.4, 'spark_matcher': 0.3, 'graph_matcher': 0.3}
-2025-06-03 21:01:44,597 - INFO - Collected 9 unique record pairs from matcher outputs.
-2025-06-03 21:01:44,599 - INFO - Generated ensemble output with 9 rows.
-2025-06-03 21:01:44,627 - INFO - Saved 9 LLM-input JSON lines to output\for_llm.jsonl
-2025-06-03 21:01:44,671 - INFO - Saved final ensembled pairs to output/final_results.csv (9 rows)
-2025-06-03 21:01:44,691 - INFO - Saved full summary report to output/report_summary.txt
+2025-06-05 00:45:54,844 - INFO - Loading configuration from d:\MyFiles\ER\ta_entity_resolver\resolver_config\config.yaml
+2025-06-05 00:45:54,859 - INFO - Configuration loaded successfully
+2025-06-05 00:45:54,859 - INFO - Starting orchestration in main.py
+2025-06-05 00:45:54,859 - INFO - Loading data from sample_data/input/sample_vendor_data.xlsx using engine: pandas and format: excel
+2025-06-05 00:45:55,344 - INFO - Pandas loaded file successfully with shape: (21, 1)
+2025-06-05 00:45:55,344 - INFO - Loaded input (sample_data/input/sample_vendor_data.xlsx) -> 21 rows, 1 cols
+2025-06-05 00:45:55,344 - INFO - Input loading completed in 0.50 seconds
+2025-06-05 00:45:55,369 - INFO - Saved preprocessed data to output\preprocessed_data.csv
+2025-06-05 00:45:55,369 - INFO - After preprocessing -> 21 rows remain
+2025-06-05 00:45:55,369 - INFO - Preprocessing completed in 0.52 seconds
+2025-06-05 00:45:55,376 - INFO - Running Exact Matcher...
+2025-06-05 00:45:55,377 - INFO - Exact-matching on fields: ['Raw_Vendor_Name']
+2025-06-05 00:45:55,381 - INFO - Completed 210 comparisons.
+2025-06-05 00:45:55,381 - INFO - Exact matcher found 1 matched pairs.
+2025-06-05 00:45:55,398 - INFO - Saved exact matcher output to output\exact_matcher.csv
+2025-06-05 00:45:55,557 - INFO - Running Fuzzy Matcher...
+2025-06-05 00:45:55,557 - INFO - Enabled algorithms: ['levenshtein', 'jaro_winkler', 'token_set_ratio']
+2025-06-05 00:45:55,557 - INFO - Matching fields: [('Raw_Vendor_Name', 0.85, 1.0)]
+2025-06-05 00:45:55,558 - INFO - Running algorithm 'levenshtein'
+2025-06-05 00:45:55,559 - INFO - [levenshtein] Completed 210 comparisons. Matches: 4; Below threshold: 206
+2025-06-05 00:45:55,561 - INFO - [levenshtein] Saved fuzzy matcher output to output\fuzzy_matcher_levenshtein.csv
+2025-06-05 00:45:55,561 - INFO - Running algorithm 'jaro_winkler'
+2025-06-05 00:45:55,561 - INFO - [jaro_winkler] Completed 210 comparisons. Matches: 37; Below threshold: 173
+2025-06-05 00:45:55,588 - INFO - [jaro_winkler] Saved fuzzy matcher output to output\fuzzy_matcher_jaro_winkler.csv
+2025-06-05 00:45:55,588 - INFO - Running algorithm 'token_set_ratio'
+2025-06-05 00:45:55,592 - INFO - [token_set_ratio] Completed 210 comparisons. Matches: 7; Below threshold: 203
+2025-06-05 00:45:55,609 - INFO - [token_set_ratio] Saved fuzzy matcher output to output\fuzzy_matcher_token_set_ratio.csv
+2025-06-05 00:45:55,612 - WARNING - Module 'matchers.graph_matcher' not found; skipping.
+2025-06-05 00:45:55,612 - INFO - Matcher execution completed in 0.77 seconds
+2025-06-05 00:45:55,613 - INFO - Running simple ensemble (pre-advanced).
+2025-06-05 00:45:55,613 - INFO - Aggregation method: weighted_average, Threshold: 0.7500
+2025-06-05 00:45:55,613 - INFO - Matcher Weights: {'fuzzy_matcher': 0.4, 'spark_matcher': 0.3, 'graph_matcher': 0.3}
+2025-06-05 00:45:55,613 - INFO - Enabled fuzzy algorithms: ['levenshtein', 'jaro_winkler', 'token_set_ratio'], per-algo weight: 0.1333
+2025-06-05 00:45:55,614 - INFO - Fuzzy score columns found: ['levenshtein_score', 'jaro_winkler_score', 'token_set_ratio_score']
+2025-06-05 00:45:55,616 - INFO - Collected 37 unique record pairs from matcher outputs.
+2025-06-05 00:45:55,628 - INFO - Saved final ensembled pairs to output/final_results.csv (37 rows)
+2025-06-05 00:45:55,646 - INFO - Saved 37 LLM-input JSON lines to output\for_llm.jsonl
+2025-06-05 00:45:55,646 - INFO - Ensembling completed in 0.80 seconds
+2025-06-05 00:45:55,663 - INFO - Saved final ensembled pairs to output/final_results.csv (37 rows)
+2025-06-05 00:45:55,684 - INFO - Saved full summary report to output/report_summary.txt
+2025-06-05 00:45:55,684 - INFO - Running LLM Validation on final matched pairs...
+2025-06-05 00:46:00,563 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 00:46:01,536 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 00:46:02,685 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 00:46:03,955 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 00:46:18,084 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 00:46:19,214 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 00:46:20,312 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 00:46:21,442 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 00:46:22,411 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 00:46:23,318 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 00:46:24,411 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 00:46:25,366 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 00:46:26,316 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 00:46:27,314 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 00:46:29,259 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 00:46:30,412 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 00:46:31,412 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 00:46:32,379 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 00:46:34,326 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 00:46:35,417 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 00:46:36,562 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 00:46:37,580 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 00:46:38,596 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 00:46:39,587 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 00:46:40,563 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 00:46:42,131 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 00:46:43,329 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 00:46:44,426 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 00:46:45,732 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 00:46:48,730 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 00:46:48,770 - INFO - LLM validated results (JSON) written to: output/llm_validated_results.jsonl
+2025-06-05 00:46:48,794 - INFO - Successfully wrote flattened CSV to: output/llm_validated_results.csv
+2025-06-05 00:46:48,796 - INFO - LLM validated results (CSV) written to: output/llm_validated_results.csv
+2025-06-05 00:46:48,796 - INFO - LLM validation completed in 53.95 seconds

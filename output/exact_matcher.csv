@@ -1,0 +1,2 @@
+record1_id,record2_id,exact_score,score_type,source
+20,21,1.0,exact_score,exact_matcher
