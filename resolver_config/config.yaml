@@ -35,10 +35,12 @@ fields_to_match:
     weight: 1.0 
     techniques:
       fuzzy: true
+    similarity_threshold: 0.8 
   - name: city
     weight: 1.0 
     techniques:
       fuzzy: true
+    similarity_threshold: 0.8 
   
 
 # --- Matcher Toggle ---   
