@@ -1,75 +1,318 @@
-2025-06-05 00:45:54,844 - INFO - Loading configuration from d:\MyFiles\ER\ta_entity_resolver\resolver_config\config.yaml
-2025-06-05 00:45:54,859 - INFO - Configuration loaded successfully
-2025-06-05 00:45:54,859 - INFO - Starting orchestration in main.py
-2025-06-05 00:45:54,859 - INFO - Loading data from sample_data/input/sample_vendor_data.xlsx using engine: pandas and format: excel
-2025-06-05 00:45:55,344 - INFO - Pandas loaded file successfully with shape: (21, 1)
-2025-06-05 00:45:55,344 - INFO - Loaded input (sample_data/input/sample_vendor_data.xlsx) -> 21 rows, 1 cols
-2025-06-05 00:45:55,344 - INFO - Input loading completed in 0.50 seconds
-2025-06-05 00:45:55,369 - INFO - Saved preprocessed data to output\preprocessed_data.csv
-2025-06-05 00:45:55,369 - INFO - After preprocessing -> 21 rows remain
-2025-06-05 00:45:55,369 - INFO - Preprocessing completed in 0.52 seconds
-2025-06-05 00:45:55,376 - INFO - Running Exact Matcher...
-2025-06-05 00:45:55,377 - INFO - Exact-matching on fields: ['Raw_Vendor_Name']
-2025-06-05 00:45:55,381 - INFO - Completed 210 comparisons.
-2025-06-05 00:45:55,381 - INFO - Exact matcher found 1 matched pairs.
-2025-06-05 00:45:55,398 - INFO - Saved exact matcher output to output\exact_matcher.csv
-2025-06-05 00:45:55,557 - INFO - Running Fuzzy Matcher...
-2025-06-05 00:45:55,557 - INFO - Enabled algorithms: ['levenshtein', 'jaro_winkler', 'token_set_ratio']
-2025-06-05 00:45:55,557 - INFO - Matching fields: [('Raw_Vendor_Name', 0.85, 1.0)]
-2025-06-05 00:45:55,558 - INFO - Running algorithm 'levenshtein'
-2025-06-05 00:45:55,559 - INFO - [levenshtein] Completed 210 comparisons. Matches: 4; Below threshold: 206
-2025-06-05 00:45:55,561 - INFO - [levenshtein] Saved fuzzy matcher output to output\fuzzy_matcher_levenshtein.csv
-2025-06-05 00:45:55,561 - INFO - Running algorithm 'jaro_winkler'
-2025-06-05 00:45:55,561 - INFO - [jaro_winkler] Completed 210 comparisons. Matches: 37; Below threshold: 173
-2025-06-05 00:45:55,588 - INFO - [jaro_winkler] Saved fuzzy matcher output to output\fuzzy_matcher_jaro_winkler.csv
-2025-06-05 00:45:55,588 - INFO - Running algorithm 'token_set_ratio'
-2025-06-05 00:45:55,592 - INFO - [token_set_ratio] Completed 210 comparisons. Matches: 7; Below threshold: 203
-2025-06-05 00:45:55,609 - INFO - [token_set_ratio] Saved fuzzy matcher output to output\fuzzy_matcher_token_set_ratio.csv
-2025-06-05 00:45:55,612 - WARNING - Module 'matchers.graph_matcher' not found; skipping.
-2025-06-05 00:45:55,612 - INFO - Matcher execution completed in 0.77 seconds
-2025-06-05 00:45:55,613 - INFO - Running simple ensemble (pre-advanced).
-2025-06-05 00:45:55,613 - INFO - Aggregation method: weighted_average, Threshold: 0.7500
-2025-06-05 00:45:55,613 - INFO - Matcher Weights: {'fuzzy_matcher': 0.4, 'spark_matcher': 0.3, 'graph_matcher': 0.3}
-2025-06-05 00:45:55,613 - INFO - Enabled fuzzy algorithms: ['levenshtein', 'jaro_winkler', 'token_set_ratio'], per-algo weight: 0.1333
-2025-06-05 00:45:55,614 - INFO - Fuzzy score columns found: ['levenshtein_score', 'jaro_winkler_score', 'token_set_ratio_score']
-2025-06-05 00:45:55,616 - INFO - Collected 37 unique record pairs from matcher outputs.
-2025-06-05 00:45:55,628 - INFO - Saved final ensembled pairs to output/final_results.csv (37 rows)
-2025-06-05 00:45:55,646 - INFO - Saved 37 LLM-input JSON lines to output\for_llm.jsonl
-2025-06-05 00:45:55,646 - INFO - Ensembling completed in 0.80 seconds
-2025-06-05 00:45:55,663 - INFO - Saved final ensembled pairs to output/final_results.csv (37 rows)
-2025-06-05 00:45:55,684 - INFO - Saved full summary report to output/report_summary.txt
-2025-06-05 00:45:55,684 - INFO - Running LLM Validation on final matched pairs...
-2025-06-05 00:46:00,563 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
-2025-06-05 00:46:01,536 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
-2025-06-05 00:46:02,685 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
-2025-06-05 00:46:03,955 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
-2025-06-05 00:46:18,084 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
-2025-06-05 00:46:19,214 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
-2025-06-05 00:46:20,312 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
-2025-06-05 00:46:21,442 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
-2025-06-05 00:46:22,411 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
-2025-06-05 00:46:23,318 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
-2025-06-05 00:46:24,411 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
-2025-06-05 00:46:25,366 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
-2025-06-05 00:46:26,316 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
-2025-06-05 00:46:27,314 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
-2025-06-05 00:46:29,259 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
-2025-06-05 00:46:30,412 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
-2025-06-05 00:46:31,412 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
-2025-06-05 00:46:32,379 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
-2025-06-05 00:46:34,326 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
-2025-06-05 00:46:35,417 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
-2025-06-05 00:46:36,562 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
-2025-06-05 00:46:37,580 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
-2025-06-05 00:46:38,596 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
-2025-06-05 00:46:39,587 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
-2025-06-05 00:46:40,563 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
-2025-06-05 00:46:42,131 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
-2025-06-05 00:46:43,329 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
-2025-06-05 00:46:44,426 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
-2025-06-05 00:46:45,732 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
-2025-06-05 00:46:48,730 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
-2025-06-05 00:46:48,770 - INFO - LLM validated results (JSON) written to: output/llm_validated_results.jsonl
-2025-06-05 00:46:48,794 - INFO - Successfully wrote flattened CSV to: output/llm_validated_results.csv
-2025-06-05 00:46:48,796 - INFO - LLM validated results (CSV) written to: output/llm_validated_results.csv
-2025-06-05 00:46:48,796 - INFO - LLM validation completed in 53.95 seconds
+2025-06-05 16:58:38,260 - INFO - Loading configuration from d:\MyFiles\ER\ta_entity_resolver\resolver_config\config.yaml
+2025-06-05 16:58:38,268 - INFO - Configuration loaded successfully
+2025-06-05 16:58:38,269 - INFO - Starting orchestration in main.py
+2025-06-05 16:58:38,269 - INFO - Loading data from sample_data/input/restaurants_100.csv using engine: pandas and format: csv
+2025-06-05 16:58:38,277 - INFO - Pandas loaded file successfully with shape: (864, 5)
+2025-06-05 16:58:38,277 - INFO - Loaded input (sample_data/input/restaurants_100.csv) -> 864 rows, 5 cols
+2025-06-05 16:58:38,278 - INFO - Input loading completed in 0.02 seconds
+2025-06-05 16:58:38,308 - INFO - Saved preprocessed data to output\preprocessed_data.csv
+2025-06-05 16:58:38,308 - INFO - After preprocessing -> 864 rows remain
+2025-06-05 16:58:38,309 - INFO - Preprocessing completed in 0.05 seconds
+2025-06-05 16:58:38,443 - INFO - Running Fuzzy Matcher...
+2025-06-05 16:58:38,444 - INFO - Enabled algorithms: ['levenshtein', 'jaro_winkler', 'token_set_ratio']
+2025-06-05 16:58:38,444 - INFO - Matching fields: [('name', 0.8, 1.0), ('address', 0.85, 1.0), ('city', 0.85, 1.0)]
+2025-06-05 16:58:38,450 - INFO - Running algorithm 'levenshtein'
+2025-06-05 16:58:40,520 - INFO - [levenshtein] Completed 372816 comparisons. Matches: 68; Below threshold: 372748
+2025-06-05 16:58:40,538 - INFO - [levenshtein] Saved fuzzy matcher output to output\fuzzy_matcher_levenshtein.csv
+2025-06-05 16:58:40,538 - INFO - Running algorithm 'jaro_winkler'
+2025-06-05 16:58:42,750 - INFO - [jaro_winkler] Completed 372816 comparisons. Matches: 371; Below threshold: 372445
+2025-06-05 16:58:42,772 - INFO - [jaro_winkler] Saved fuzzy matcher output to output\fuzzy_matcher_jaro_winkler.csv
+2025-06-05 16:58:42,772 - INFO - Running algorithm 'token_set_ratio'
+2025-06-05 16:58:47,553 - INFO - [token_set_ratio] Completed 372816 comparisons. Matches: 133; Below threshold: 372683
+2025-06-05 16:58:47,570 - INFO - [token_set_ratio] Saved fuzzy matcher output to output\fuzzy_matcher_token_set_ratio.csv
+2025-06-05 16:58:47,573 - INFO - Matcher execution completed in 9.31 seconds
+2025-06-05 16:58:47,573 - INFO - Running simple ensemble (pre-advanced).
+2025-06-05 16:58:47,574 - INFO - Aggregation method: weighted_average, Threshold: 0.7500
+2025-06-05 16:58:47,574 - INFO - Matcher Weights: {'fuzzy_matcher': 0.4, 'spark_matcher': 0.3, 'graph_matcher': 0.3}
+2025-06-05 16:58:47,574 - INFO - Enabled fuzzy algorithms: ['levenshtein', 'jaro_winkler', 'token_set_ratio'], per-algo weight: 0.1333
+2025-06-05 16:58:47,574 - INFO - Fuzzy score columns found: ['levenshtein_score', 'jaro_winkler_score', 'token_set_ratio_score']
+2025-06-05 16:58:47,603 - INFO - Collected 381 unique record pairs from matcher outputs.
+2025-06-05 16:58:47,624 - INFO - Saved final ensembled pairs to output/final_results.csv (381 rows)
+2025-06-05 16:58:47,719 - INFO - Saved 381 LLM-input JSON lines to output\for_llm.jsonl
+2025-06-05 16:58:47,720 - INFO - Ensembling completed in 9.46 seconds
+2025-06-05 16:58:47,737 - INFO - Saved final ensembled pairs to output/final_results.csv (381 rows)
+2025-06-05 16:58:47,765 - INFO - Saved full summary report to output/report_summary.txt
+2025-06-05 16:58:47,765 - INFO - Running LLM Validation on final matched pairs...
+2025-06-05 16:58:51,568 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 16:58:53,013 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 16:58:54,452 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 16:58:55,963 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 16:58:57,087 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 16:58:58,336 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 16:58:59,770 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 16:59:01,437 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 16:59:02,630 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 16:59:04,740 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 16:59:05,970 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 16:59:07,160 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 16:59:08,371 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 16:59:09,719 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 16:59:11,389 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 16:59:12,572 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 16:59:13,762 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 16:59:14,845 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 16:59:16,199 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 16:59:17,307 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 16:59:20,512 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 16:59:21,755 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 16:59:22,849 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 16:59:24,064 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 16:59:25,332 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 16:59:26,495 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 16:59:27,573 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 16:59:28,772 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 16:59:29,946 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 16:59:31,107 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 16:59:32,569 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 16:59:33,715 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 16:59:34,969 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 16:59:36,406 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 16:59:37,555 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 16:59:38,720 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 16:59:40,010 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 16:59:41,173 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 16:59:42,480 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 16:59:43,665 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 16:59:44,822 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 16:59:45,945 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 16:59:47,095 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 16:59:48,307 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 16:59:49,260 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 16:59:50,310 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 16:59:52,192 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 16:59:53,682 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 16:59:54,854 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 16:59:55,986 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 16:59:57,130 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 16:59:58,844 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 16:59:59,902 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:00:01,573 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:00:02,761 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:00:03,839 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:00:05,593 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:00:07,958 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:00:09,023 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:00:10,313 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:00:11,558 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:00:12,610 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:00:13,656 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:00:14,799 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:00:16,164 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:00:17,341 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:00:19,156 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:00:20,191 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:00:21,224 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:00:22,819 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:00:23,984 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:00:25,026 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:00:26,357 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:00:27,381 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:00:28,613 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:00:29,686 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:00:31,083 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:00:32,062 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:00:34,006 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:00:35,111 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:00:36,276 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:00:37,447 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:00:38,510 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:00:39,672 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:00:40,841 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:00:41,834 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:00:42,974 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:00:44,190 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:00:45,597 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:00:46,676 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:00:47,703 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:00:48,895 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:00:50,211 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:00:51,599 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:00:53,055 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:00:54,312 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:00:55,481 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:00:56,726 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:00:58,089 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:00:59,802 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:01:01,031 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:01:01,974 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:01:03,313 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:01:04,344 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:01:05,721 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:01:07,384 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:01:09,004 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:01:10,290 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:01:11,432 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:01:12,476 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:01:13,706 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:01:15,284 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:01:16,782 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:01:17,998 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:01:19,522 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:01:20,730 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:01:21,864 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:01:23,125 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:01:24,567 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:01:25,910 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:01:27,142 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:01:28,167 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:01:29,206 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:01:30,372 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:01:31,951 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:01:33,377 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:01:34,542 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:01:35,904 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:01:37,074 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:01:38,295 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:01:39,545 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:01:41,094 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:01:42,557 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:01:43,623 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:01:44,794 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:01:46,050 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:01:47,262 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:01:48,539 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:01:49,729 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:01:51,008 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:01:52,188 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:01:53,985 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:01:55,484 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:01:56,713 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:01:57,800 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:01:59,072 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:02:00,212 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:02:01,492 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:02:02,549 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:02:03,823 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:02:05,063 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:02:06,263 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:02:08,243 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:02:09,466 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:02:10,629 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:02:11,907 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:02:13,042 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:02:14,380 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:02:16,744 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:02:17,772 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:02:18,913 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:02:20,007 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:02:21,763 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:02:23,131 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:02:24,242 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:02:25,669 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:02:26,834 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:02:27,964 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:02:28,992 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:02:30,081 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:02:33,068 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:02:34,310 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:02:35,864 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:02:37,019 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:02:38,212 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:02:39,380 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:02:40,679 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:02:41,910 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:02:43,254 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:02:44,296 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:02:45,298 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:02:46,555 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:02:47,816 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:02:48,892 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:02:50,144 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:02:51,471 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:02:52,626 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:02:54,194 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:02:55,255 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:02:56,452 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:02:57,907 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:02:58,951 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:03:00,286 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:03:01,782 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:03:02,934 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:03:04,000 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:03:05,692 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:03:07,058 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:03:08,441 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:03:11,200 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:03:12,455 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:03:13,778 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:03:14,897 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:03:16,599 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:03:17,732 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:03:18,851 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:03:20,250 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:03:21,279 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:03:22,532 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:03:23,772 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:03:25,160 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:03:26,595 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:03:27,509 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:03:28,596 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:03:29,703 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:03:30,740 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:03:31,822 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:03:32,892 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:03:34,170 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:03:35,268 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:03:36,330 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:03:37,534 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:03:38,531 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:03:39,874 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:03:40,883 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:03:41,994 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:03:43,247 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:03:45,227 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:03:46,179 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:03:47,495 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:03:48,761 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:03:49,918 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:03:51,245 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:03:52,189 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:03:53,544 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:03:54,693 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:03:56,282 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:03:57,567 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:03:58,577 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:04:01,810 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:04:02,912 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:04:03,920 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:04:05,012 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:04:06,026 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:04:07,148 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:04:08,554 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:04:10,939 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:04:11,977 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:04:13,269 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:04:14,235 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:04:15,242 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:04:16,253 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:04:17,493 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:04:18,859 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:04:20,077 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:04:21,093 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:04:22,395 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:04:23,632 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:04:25,135 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:04:26,339 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:04:27,430 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:04:28,627 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:04:29,789 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:04:30,860 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:04:32,358 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:04:33,372 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:04:34,604 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:04:36,181 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:04:37,333 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:04:38,625 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:04:39,921 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:04:41,053 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:04:42,232 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:04:43,335 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:04:45,705 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:04:46,952 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:04:48,005 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:04:49,025 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:04:50,159 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:04:51,232 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:04:52,451 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:04:54,276 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-05 17:04:55,630 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"

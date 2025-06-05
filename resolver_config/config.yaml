@@ -2,8 +2,8 @@
 
 # --- Input and Output ---
 input:
-  path: sample_data/input/sample_vendor_data.xlsx #sample_data/input/sample_vendor_data.xlsx
-  format: excel  #csv
+  path: sample_data/input/restaurants_100.csv #sample_data/input/sample_vendor_data.xlsx
+  format: csv  #excel
   sheet_name: Sheet1
   delimiter: ","
   header: true
@@ -11,10 +11,13 @@ input:
 output:
   fuzzy_matcher_path: output/fuzzy_matcher.csv
   ml_spark_matcher_path: output/ml_spark_matcher.csv
+  graph_matcher_path: output/graph_matcher.csv
   resolved_pairs_path: output/final_results.csv
   report_path: output/report_summary.txt
   llm_validated_results_path: output/llm_validated_results.jsonl
   llm_validated_csv_path: output/llm_validated_results.csv
+  llm_report_path: output/llm_summary_report.txt
+  pipeline_log_path: output/pipeline.log
   
 record_id_column: record_id  
 
@@ -23,12 +26,16 @@ record_id_column: record_id
 # Each field can specify multiple techniques with weights and thresholds
 # Prioritize certain fields when computing match score per record pair
 fields_to_match:
-  - name: Raw_Vendor_Name
+  - name: name
     weight: 1.0 
     techniques:
-      exact: true
+      fuzzy: true
     similarity_threshold: 0.8   #per‐field cutoff for accepting a match in the fuzzy matcher
-  - name: Raw_Vendor_Name
+  - name: address
+    weight: 1.0 
+    techniques:
+      fuzzy: true
+  - name: city
     weight: 1.0 
     techniques:
       fuzzy: true
@@ -43,7 +50,7 @@ matchers:
   use_phonetic: false
   use_ml_spark_matcher: false
   use_ml_zingg: false
-  use_graph: true
+  use_graph: false
 
 # --- Matching Technique Configuration ---
 matching_techniques_config:
@@ -58,12 +65,26 @@ matching_techniques_config:
     # Default algorithm (options: "soundex", "metaphone", "nysiis")
     algorithm: soundex 
 
-  graph_based:
-    enabled: true  # Set to true to enable Neo4j (requires Neo4j setup)
-    component_algorithm: connected_components
-    uri: "bolt://localhost:7687"
-    user: "neo4j"
-    password: "password"
+  graph_matcher:
+    enabled: false  # Set to true to enable Neo4j (requires Neo4j setup)
+    neo4j_uri: bolt://3.92.203.172
+    neo4j_user: neo4j
+    neo4j_password_env_var: NEO4J_PASSWORD
+    neo4j_database: neo4j
+    entity_columns:
+      - name
+      - address
+      - city
+      #- email
+    match_types:
+      - fuzzy
+      - fuzzy
+      - fuzzy
+    fuzzy_thresholds:
+      - 0.7
+      - 0.7
+      - 1.0
+
 
   ml_based_spark_matcher:
     enabled: false
@@ -95,9 +116,15 @@ fuzzy_sub_weights:
 required_votes: 2
 
 
+#---- Postprocessing ---
+postprocessing:
+  cluster: false
+  canonical_selection: false
+  llm_validation: true
+  report_generation: true
 
 
-# --- LLM Validation ---
+# --- LLM Configuration ---
 # Azure OpenAI Service Configuration
 azure_openai:
   # Your deployed model name (corresponds to 'open_ai_engine')
@@ -128,8 +155,6 @@ input_data:
 
 # General LLM validation logic
 llm_validation:
-  enabled: true
-  
   # Validate pairs with a 'final_score' >= this threshold.
   # LLM will only be called for scores between auto_non_match_threshold and auto_match_threshold.
   confidence_threshold_for_llm: 0.70 
@@ -144,13 +169,6 @@ llm_validation:
   log_raw_llm_response: false
 
 
-
-
-#---- Postprocessing ---
-postprocessing:
-  cluster: False
-  canonical_selection: False
-  llm_validation: False
 
 # --- Data Processing Engine ---
 engine: pandas  # default is pandas, keep 'pyspark' for larger datasets

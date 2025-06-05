@@ -13,6 +13,7 @@ from postprocessing.llm_validator import (
     call_llm_and_parse_response
 )
 from utilities.file_utils import write_json_to_csv
+from utilities.report_generator import run_report_generation
 
 
 # -----------------------------------------------
@@ -162,28 +163,47 @@ def main():
 
 
     # Step: Run LLM Validation (if enabled in config)
-    if config.get("llm_validation", {}).get("enabled", False):
+    llm_enabled = config.get("postprocessing", {}).get("llm_validation", False)
+    if llm_enabled:
         logger.info("Running LLM Validation on final matched pairs...")
         validated_results = run_llm_validation(config)
 
         # write to output file
-        validated_output_path = config["output"].get("llm_validated_results_path", "output/llm_validated_results.jsonl")
-        validated_output_path_csv = config["output"].get("llm_validated_csv_path", "output/llm_validated_results.csv")
-
+        validated_output_path = config["output"].get(
+            "llm_validated_results_path", 
+            "output/llm_validated_results.jsonl"
+        )
         with open(validated_output_path, "w", encoding="utf-8") as f_out:
             for item in validated_results:
                 f_out.write(json.dumps(item, ensure_ascii=False) + "\n")
-        
-        logger.info(f"LLM validated results (JSON) written to: {validated_output_path}")
+        logger.info("LLM validated results (JSON) written to: %s", validated_output_path)
 
         # Write the validated results to CSV
+        validated_output_path_csv = config["output"].get(
+            "llm_validated_csv_path", 
+            "output/llm_validated_results.csv"
+        )
         write_json_to_csv(validated_results, validated_output_path_csv)
+        logger.info("LLM validated results (CSV) written to: %s", validated_output_path_csv)
 
-        logger.info(f"LLM validated results (CSV) written to: {validated_output_path_csv}")
-        
-        logger.info(f"LLM validation completed in {time.time() - start_time:.2f} seconds")
+        logger.info("LLM validation completed in %.2f seconds", time.time() - start_time)
     else:
-        logger.info("LLM Validation is disabled in config. Skipping.")
+        logger.info("LLM Validation is disabled under postprocessing. Skipping.")
+
+     
+
+    # Step: Generate Summary Report (if enabled in config)
+    if config.get("postprocessing", {}).get("report_generation", False):
+        from utilities.report_generator import run_report_generation
+
+        logger.info("Running Report Generation based on pipeline log...")
+        report_text = run_report_generation(config)
+        logger.info("Report Generation completed in %.2f seconds", time.time() - start_time)
+        # Optionally print or log the generated report text
+        logger.debug("Generated Report:\n%s", report_text)
+    else:
+        logger.info("Report Generation is disabled in config. Skipping.")
+
 
 
 if __name__ == "__main__":
