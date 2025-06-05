@@ -153,25 +153,30 @@ def read_jsonl_file(file_path: str):
                     print(f"Skipping malformed JSON line: '{line}' - Error: {e}")
 
 
-
 def run_llm_validation(config: dict):
     try:
-        
-        # Extract specific sections
-        azure_openai_config = config.get('azure_openai', {})
-        llm_validation_config = config.get('llm_validation', {})
-        input_data_config = config.get('input_data', {})
+        # 0) Check the postprocessing toggle for LLM validation
+        post_cfg = config.get("postprocessing", {})
+        llm_enabled = post_cfg.get("llm_validation", False)
+        if not llm_enabled:
+            return []
+
+        # 1) Extract specific sections
+        azure_openai_config   = config.get("azure_openai", {})
+        llm_validation_config = config.get("llm_validation", {})
+        input_data_config     = config.get("input_data", {})
 
         # Initialize LLM client using the extracted Azure OpenAI configurations
         llm_client = initialize_llm_client(azure_openai_config)
 
         # Get the input file path from the config
-        input_file_path = input_data_config.get('file_path')
+        input_file_path = input_data_config.get("file_path")
         if not input_file_path:
             raise ValueError("Input file path not specified in config.yaml under 'input_data.file_path'.")
 
         print(f"--- Starting LLM Validation from '{input_file_path}' (Azure OpenAI) ---")
-        print(f"LLM validation enabled: {llm_validation_config.get('enabled', False)}")
+        # Show the postprocessing toggle rather than looking for "enabled" under top-level
+        print(f"LLM validation enabled (postprocessing): {llm_enabled}")
         print(f"Auto-match threshold: {llm_validation_config.get('auto_match_threshold', 'N/A')}")
         print(f"Auto-non-match threshold: {llm_validation_config.get('auto_non_match_threshold', 'N/A')}")
         print(f"LLM call threshold: {llm_validation_config.get('confidence_threshold_for_llm', 'N/A')}\n")
@@ -179,25 +184,28 @@ def run_llm_validation(config: dict):
         final_validated_records = []
         # Read data from the JSONL file
         for i, record_pair in enumerate(read_jsonl_file(input_file_path)):
-            record_id_1 = record_pair.get('metadata', {}).get('record1_id', 'N/A')
-            record_id_2 = record_pair.get('metadata', {}).get('record2_id', 'N/A')
+            record_id_1 = record_pair.get("metadata", {}).get("record1_id", "N/A")
+            record_id_2 = record_pair.get("metadata", {}).get("record2_id", "N/A")
             print(f"Processing record pair {i+1} (IDs: {record_id_1}, {record_id_2})...")
 
             llm_verdict = "N/A"
             llm_explanation = "LLM not called."
             
             # Extract the relevant score for decision making
-            final_score = record_pair.get('scores', {}).get('final_score', 0.0)
+            final_score = record_pair.get("scores", {}).get("final_score", 0.0)
 
-            if not llm_validation_config.get("enabled", False):
-                llm_verdict = "skipped"
-                llm_explanation = "LLM validation is disabled."
-            elif final_score >= llm_validation_config.get("auto_match_threshold", 1.0):
+            if final_score >= llm_validation_config.get("auto_match_threshold", 1.0):
                 llm_verdict = "auto_match"
-                llm_explanation = f"Final score ({final_score:.4f}) is above auto-match threshold ({llm_validation_config.get('auto_match_threshold', 1.0):.2f})."
+                llm_explanation = (
+                    f"Final score ({final_score:.4f}) is above auto-match threshold "
+                    f"({llm_validation_config.get('auto_match_threshold', 1.0):.2f})."
+                )
             elif final_score <= llm_validation_config.get("auto_non_match_threshold", 0.0):
                 llm_verdict = "auto_no_match"
-                llm_explanation = f"Final score ({final_score:.4f}) is below auto-non-match threshold ({llm_validation_config.get('auto_non_match_threshold', 0.0):.2f})."
+                llm_explanation = (
+                    f"Final score ({final_score:.4f}) is below auto-non-match threshold "
+                    f"({llm_validation_config.get('auto_non_match_threshold', 0.0):.2f})."
+                )
             elif final_score >= llm_validation_config.get("confidence_threshold_for_llm", 0.0):
                 # Call LLM only if within the "ambiguous" range and above LLM call threshold
                 llm_output = call_llm_and_parse_response(
@@ -209,27 +217,32 @@ def run_llm_validation(config: dict):
                 llm_explanation = llm_output.get("llm_explanation", "Error in processing.")
             else:
                 llm_verdict = "skipped"
-                llm_explanation = f"Final score ({final_score:.4f}) is below LLM call threshold ({llm_validation_config.get('confidence_threshold_for_llm', 0.0):.2f})."
+                llm_explanation = (
+                    f"Final score ({final_score:.4f}) is below LLM call threshold "
+                    f"({llm_validation_config.get('confidence_threshold_for_llm', 0.0):.2f})."
+                )
             
             validated_record = {
-                "record1_data": record_pair.get('record1', {}),
-                "record2_data": record_pair.get('record2', {}),
-                "scores": record_pair.get('scores', {}),
-                "metadata": record_pair.get('metadata', {}),
+                "record1_data": record_pair.get("record1", {}),
+                "record2_data": record_pair.get("record2", {}),
+                "scores": record_pair.get("scores", {}),
+                "metadata": record_pair.get("metadata", {}),
                 "llm_verdict": llm_verdict,
                 "llm_explanation": llm_explanation
             }
             final_validated_records.append(validated_record)
 
         return final_validated_records
-    
+
     except FileNotFoundError as fnfe:
         print(f"\nError: {fnfe}")
         print("Please ensure your 'resolver_config/config.yaml' file exists and its paths are correct,")
         print("and that 'postprocessing/for_llm.json' also exists.")
-
     except Exception as e:
         print(f"\nAn unexpected error occurred during processing: {e}")
         import traceback
         traceback.print_exc()
-        return []
+    return []
+
+
+    

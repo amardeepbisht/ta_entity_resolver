@@ -1,0 +1,12 @@
+record1_id,record2_id,graph_score,score_type,source
+20,21,1.0,graph_score,graph_matcher
+7,8,0.9285714285714286,graph_score,graph_matcher
+17,20,0.9285714285714286,graph_score,graph_matcher
+17,21,0.9285714285714286,graph_score,graph_matcher
+7,9,0.7857142857142857,graph_score,graph_matcher
+8,9,0.7857142857142857,graph_score,graph_matcher
+1,2,0.7727272727272727,graph_score,graph_matcher
+16,17,0.7368421052631579,graph_score,graph_matcher
+16,19,0.7368421052631579,graph_score,graph_matcher
+17,19,0.7368421052631579,graph_score,graph_matcher
+1,3,0.7,graph_score,graph_matcher
