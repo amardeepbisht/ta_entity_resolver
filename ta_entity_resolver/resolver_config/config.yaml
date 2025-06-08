@@ -2,22 +2,22 @@
 
 # --- Input and Output ---
 input:
-  path: sample_data/input/restaurants_25.csv #sample_data/input/sample_vendor_data.xlsx
+  path: ta_entity_resolver/sample_data/input/restaurants_25.csv #sample_data/input/sample_vendor_data.xlsx
   format: csv  #excel
   sheet_name: Sheet1
   delimiter: ","
   header: true
 
 output:
-  fuzzy_matcher_path: output/fuzzy_matcher.csv
-  ml_spark_matcher_path: output/ml_spark_matcher.csv
-  graph_matcher_path: output/graph_matcher.csv
-  resolved_pairs_path: output/final_results.csv
-  report_path: output/report_summary.txt
-  llm_validated_results_path: output/llm_validated_results.jsonl
-  llm_validated_csv_path: output/llm_validated_results.csv
-  llm_report_path: output/llm_summary_report.txt
-  pipeline_log_path: output/pipeline.log
+  fuzzy_matcher_path: ta_entity_resolver/output/fuzzy_matcher.csv
+  ml_spark_matcher_path: ta_entity_resolver/output/ml_spark_matcher.csv
+  graph_matcher_path: ta_entity_resolver/output/graph_matcher.csv
+  resolved_pairs_path: ta_entity_resolver/output/final_results.csv
+  report_path: ta_entity_resolver/output/report_summary.txt
+  llm_validated_results_path: ta_entity_resolver/output/llm_validated_results.jsonl
+  llm_validated_csv_path: ta_entity_resolver/output/llm_validated_results.csv
+  llm_report_path: ta_entity_resolver/output/llm_summary_report.txt
+  pipeline_log_path: ta_entity_resolver/output/pipeline.log
   
 record_id_column: record_id  
 
@@ -152,7 +152,7 @@ azure_openai:
 # Input file path
 input_data:
   # Path to your JSONL input file relative to where the script is run
-  file_path: "output/for_llm.jsonl" 
+  file_path: "ta_entity_resolver/output/for_llm.jsonl" 
 
 
 # General LLM validation logic
