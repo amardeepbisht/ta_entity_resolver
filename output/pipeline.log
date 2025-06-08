@@ -1,80 +1,81 @@
-2025-06-05 19:28:51,791 - INFO - Loading configuration from d:\MyFiles\ER\ta_entity_resolver\resolver_config\config.yaml
-2025-06-05 19:28:51,799 - INFO - Configuration loaded successfully
-2025-06-05 19:28:51,799 - INFO - Starting orchestration in main.py
-2025-06-05 19:28:51,799 - INFO - Loading data from sample_data/input/restaurants_100.csv using engine: pandas and format: csv
-2025-06-05 19:28:51,816 - INFO - Pandas loaded file successfully with shape: (98, 5)
-2025-06-05 19:28:51,816 - INFO - Loaded input (sample_data/input/restaurants_100.csv) -> 98 rows, 5 cols
-2025-06-05 19:28:51,816 - INFO - Input loading completed in 0.02 seconds
-2025-06-05 19:28:51,839 - INFO - Saved preprocessed data to output\preprocessed_data.csv
-2025-06-05 19:28:51,840 - INFO - After preprocessing -> 98 rows remain
-2025-06-05 19:28:51,840 - INFO - Preprocessing completed in 0.05 seconds
-2025-06-05 19:28:51,983 - INFO - Running Fuzzy Matcher...
-2025-06-05 19:28:51,983 - INFO - Enabled algorithms: ['levenshtein', 'jaro_winkler', 'token_set_ratio']
-2025-06-05 19:28:51,983 - INFO - Matching fields: [('name', 0.8, 1.0), ('address', 0.85, 1.0), ('city', 0.85, 1.0)]
-2025-06-05 19:28:51,987 - INFO - Running algorithm 'levenshtein'
-2025-06-05 19:28:52,017 - INFO - [levenshtein] Completed 4753 comparisons. Matches: 27; Below threshold: 4726
-2025-06-05 19:28:52,034 - INFO - [levenshtein] Saved fuzzy matcher output to output\fuzzy_matcher_levenshtein.csv
-2025-06-05 19:28:52,034 - INFO - Running algorithm 'jaro_winkler'
-2025-06-05 19:28:52,064 - INFO - [jaro_winkler] Completed 4753 comparisons. Matches: 50; Below threshold: 4703
-2025-06-05 19:28:52,084 - INFO - [jaro_winkler] Saved fuzzy matcher output to output\fuzzy_matcher_jaro_winkler.csv
-2025-06-05 19:28:52,084 - INFO - Running algorithm 'token_set_ratio'
-2025-06-05 19:28:52,127 - INFO - [token_set_ratio] Completed 4753 comparisons. Matches: 41; Below threshold: 4712
-2025-06-05 19:28:52,146 - INFO - [token_set_ratio] Saved fuzzy matcher output to output\fuzzy_matcher_token_set_ratio.csv
-2025-06-05 19:28:52,149 - INFO - Matcher execution completed in 0.36 seconds
-2025-06-05 19:28:52,149 - INFO - Running simple ensemble (pre-advanced).
-2025-06-05 19:28:52,149 - INFO - Aggregation method: weighted_average, Threshold: 0.7500
-2025-06-05 19:28:52,150 - INFO - Matcher Weights: {'fuzzy_matcher': 0.4, 'spark_matcher': 0.3, 'graph_matcher': 0.3}
-2025-06-05 19:28:52,150 - INFO - Enabled fuzzy algorithms: ['levenshtein', 'jaro_winkler', 'token_set_ratio'], per-algo weight: 0.1333
-2025-06-05 19:28:52,150 - INFO - Fuzzy score columns found: ['levenshtein_score', 'jaro_winkler_score', 'token_set_ratio_score']
-2025-06-05 19:28:52,153 - INFO - Collected 51 unique record pairs from matcher outputs.
-2025-06-05 19:28:52,171 - INFO - Saved final ensembled pairs to output/final_results.csv (51 rows)
-2025-06-05 19:28:52,194 - INFO - Saved 51 LLM-input JSON lines to output\for_llm.jsonl
-2025-06-05 19:28:52,194 - INFO - Ensembling completed in 0.40 seconds
-2025-06-05 19:28:52,210 - INFO - Saved final ensembled pairs to output/final_results.csv (51 rows)
-2025-06-05 19:28:52,226 - INFO - Saved full summary report to output/report_summary.txt
-2025-06-05 19:28:52,227 - INFO - Running LLM Validation on final matched pairs...
-2025-06-05 19:28:55,954 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
-2025-06-05 19:28:57,113 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
-2025-06-05 19:28:58,796 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
-2025-06-05 19:28:59,884 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
-2025-06-05 19:29:01,339 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
-2025-06-05 19:29:02,262 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
-2025-06-05 19:29:03,615 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
-2025-06-05 19:29:04,991 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
-2025-06-05 19:29:06,330 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
-2025-06-05 19:29:07,488 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
-2025-06-05 19:29:08,577 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
-2025-06-05 19:29:12,424 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
-2025-06-05 19:29:13,877 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
-2025-06-05 19:29:14,937 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
-2025-06-05 19:29:17,519 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
-2025-06-05 19:29:18,601 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
-2025-06-05 19:29:19,901 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
-2025-06-05 19:29:22,142 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
-2025-06-05 19:29:23,570 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
-2025-06-05 19:29:24,581 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
-2025-06-05 19:29:25,645 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
-2025-06-05 19:29:27,331 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
-2025-06-05 19:29:28,619 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
-2025-06-05 19:29:29,999 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
-2025-06-05 19:29:31,427 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
-2025-06-05 19:29:35,412 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
-2025-06-05 19:29:36,799 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
-2025-06-05 19:29:37,897 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
-2025-06-05 19:29:39,007 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
-2025-06-05 19:29:40,157 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
-2025-06-05 19:29:41,190 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
-2025-06-05 19:29:42,865 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
-2025-06-05 19:29:44,434 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
-2025-06-05 19:29:44,469 - INFO - LLM validated results (JSON) written to: output/llm_validated_results.jsonl
-2025-06-05 19:29:44,492 - INFO - Successfully wrote flattened CSV to: output/llm_validated_results.csv
-2025-06-05 19:29:44,492 - INFO - LLM validated results (CSV) written to: output/llm_validated_results.csv
-2025-06-05 19:29:44,493 - INFO - LLM validation completed in 52.70 seconds
-2025-06-05 19:29:44,493 - INFO - Running Report Generation based on pipeline log...
-2025-06-05 19:29:44,493 - INFO - Parsing pipeline log: output/pipeline.log
-2025-06-05 19:29:44,508 - INFO - Initializing AzureChatOpenAI client with deployment: gpt-4o-mini
-2025-06-05 19:29:45,386 - INFO - Calling LLM to generate summary report
-2025-06-05 19:29:48,994 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
-2025-06-05 19:29:48,995 - INFO - Received summary report from LLM
-2025-06-05 19:29:49,004 - INFO - Saved LLM summary report to: output/llm_summary_report.txt
-2025-06-05 19:29:49,005 - INFO - Report Generation completed in 57.21 seconds
+2025-06-08 10:31:46,634 - INFO - Loading configuration from /Users/ady/Projects/ta_entity_resolver/resolver_config/config.yaml
+2025-06-08 10:31:46,641 - INFO - Configuration loaded successfully
+2025-06-08 10:31:46,641 - INFO - Starting orchestration in main.py
+2025-06-08 10:31:46,641 - INFO - Loading data from sample_data/input/restaurants_25.csv using engine: pandas and format: csv
+2025-06-08 10:31:46,664 - INFO - Pandas loaded file successfully with shape: (25, 5)
+2025-06-08 10:31:46,664 - INFO - Loaded input (sample_data/input/restaurants_25.csv) -> 25 rows, 5 cols
+2025-06-08 10:31:46,664 - INFO - Input loading completed in 0.03 seconds
+2025-06-08 10:31:46,674 - INFO - Saved preprocessed data to output/preprocessed_data.csv
+2025-06-08 10:31:46,674 - INFO - After preprocessing -> 25 rows remain
+2025-06-08 10:31:46,674 - INFO - Preprocessing completed in 0.04 seconds
+2025-06-08 10:31:46,701 - INFO - Running Fuzzy Matcher...
+2025-06-08 10:31:46,701 - INFO - Enabled algorithms: ['levenshtein', 'jaro_winkler', 'token_set_ratio']
+2025-06-08 10:31:46,701 - INFO - Matching fields: [('name', 0.8, 1.0), ('address', 0.8, 1.0), ('city', 0.8, 1.0)]
+2025-06-08 10:31:46,702 - INFO - Running algorithm 'levenshtein'
+2025-06-08 10:31:46,704 - INFO - [levenshtein] Completed 300 comparisons. Matches: 7; Below threshold: 293
+2025-06-08 10:31:46,706 - INFO - [levenshtein] Saved fuzzy matcher output to output/fuzzy_matcher_levenshtein.csv
+2025-06-08 10:31:46,706 - INFO - Running algorithm 'jaro_winkler'
+2025-06-08 10:31:46,708 - INFO - [jaro_winkler] Completed 300 comparisons. Matches: 12; Below threshold: 288
+2025-06-08 10:31:46,709 - INFO - [jaro_winkler] Saved fuzzy matcher output to output/fuzzy_matcher_jaro_winkler.csv
+2025-06-08 10:31:46,709 - INFO - Running algorithm 'token_set_ratio'
+2025-06-08 10:31:46,712 - INFO - [token_set_ratio] Completed 300 comparisons. Matches: 11; Below threshold: 289
+2025-06-08 10:31:46,713 - INFO - [token_set_ratio] Saved fuzzy matcher output to output/fuzzy_matcher_token_set_ratio.csv
+2025-06-08 10:31:46,813 - INFO - Running Graph Matcher...
+2025-06-08 10:31:46,813 - INFO - Running Graph Matcher
+2025-06-08 10:31:46,813 - INFO - Initializing LocalGraphLoader with Neo4j URI: bolt://3.92.203.172
+2025-06-08 10:31:46,813 - INFO - Neo4j driver successfully created; database=neo4j
+2025-06-08 10:31:46,813 - INFO - Clearing Neo4j database: neo4j
+2025-06-08 10:31:47,813 - INFO - Database cleared successfully
+2025-06-08 10:31:47,813 - INFO - Loading graph in batches: total_records=25, batch_size=1000
+2025-06-08 10:31:47,814 - INFO - Processing batch 0 to 24
+2025-06-08 10:32:15,904 - INFO - Completed batch 0 to 24
+2025-06-08 10:32:15,905 - INFO - Finished loading all 25 records into graph
+2025-06-08 10:32:15,906 - INFO - Creating similarity edges with factor=3
+2025-06-08 10:32:15,907 - INFO - Creating edges for column='name', type='fuzzy', threshold=0.8
+2025-06-08 10:32:16,143 - INFO - Creating edges for column='address', type='fuzzy', threshold=0.8
+2025-06-08 10:32:16,145 - INFO - Received notification from DBMS server: {severity: INFORMATION} {code: Neo.ClientNotification.Statement.CartesianProduct} {category: PERFORMANCE} {title: This query builds a cartesian product between disconnected patterns.} {description: If a part of a query contains multiple disconnected patterns, this will build a cartesian product between all those parts. This may produce a large amount of data and slow down query processing. While occasionally intended, it may often be possible to reformulate the query that avoids the use of this cross product, perhaps by adding a relationship between the different parts or by using OPTIONAL MATCH (identifiers are: (b, t2))} {position: line: 2, column: 29, offset: 29} for query: '\n                            MATCH (a:Record)-[:HAS_NAME]->(t1:Name),\n                                  (b:Record)-[:HAS_NAME]->(t2:Name)\n                            WHERE a.id < b.id \n                            WITH a, b, t1, t2,\n                                CASE \n                                    WHEN toLower(t1.value) = toLower(t2.value) THEN 1.0 \n                                    ELSE apoc.text.levenshteinSimilarity(toLower(t1.value), toLower(t2.value)) \n                                END AS sim_score\n                            WHERE sim_score >= $threshold\n                            MERGE (a)-[r:SIMILAR_TO]->(b)\n                            ON CREATE SET r.score = sim_score / 3, r.reasons = [$col]\n                            ON MATCH SET r.score = r.score + sim_score / 3, r.reasons = r.reasons + $col\n                        '
+2025-06-08 10:32:16,382 - INFO - Creating edges for column='city', type='fuzzy', threshold=0.8
+2025-06-08 10:32:16,384 - INFO - Received notification from DBMS server: {severity: INFORMATION} {code: Neo.ClientNotification.Statement.CartesianProduct} {category: PERFORMANCE} {title: This query builds a cartesian product between disconnected patterns.} {description: If a part of a query contains multiple disconnected patterns, this will build a cartesian product between all those parts. This may produce a large amount of data and slow down query processing. While occasionally intended, it may often be possible to reformulate the query that avoids the use of this cross product, perhaps by adding a relationship between the different parts or by using OPTIONAL MATCH (identifiers are: (b, t2))} {position: line: 2, column: 29, offset: 29} for query: '\n                            MATCH (a:Record)-[:HAS_ADDRESS]->(t1:Address),\n                                  (b:Record)-[:HAS_ADDRESS]->(t2:Address)\n                            WHERE a.id < b.id \n                            WITH a, b, t1, t2,\n                                CASE \n                                    WHEN toLower(t1.value) = toLower(t2.value) THEN 1.0 \n                                    ELSE apoc.text.levenshteinSimilarity(toLower(t1.value), toLower(t2.value)) \n                                END AS sim_score\n                            WHERE sim_score >= $threshold\n                            MERGE (a)-[r:SIMILAR_TO]->(b)\n                            ON CREATE SET r.score = sim_score / 3, r.reasons = [$col]\n                            ON MATCH SET r.score = r.score + sim_score / 3, r.reasons = r.reasons + $col\n                        '
+2025-06-08 10:32:16,627 - INFO - Received notification from DBMS server: {severity: INFORMATION} {code: Neo.ClientNotification.Statement.CartesianProduct} {category: PERFORMANCE} {title: This query builds a cartesian product between disconnected patterns.} {description: If a part of a query contains multiple disconnected patterns, this will build a cartesian product between all those parts. This may produce a large amount of data and slow down query processing. While occasionally intended, it may often be possible to reformulate the query that avoids the use of this cross product, perhaps by adding a relationship between the different parts or by using OPTIONAL MATCH (identifiers are: (b, t2))} {position: line: 2, column: 29, offset: 29} for query: '\n                            MATCH (a:Record)-[:HAS_CITY]->(t1:City),\n                                  (b:Record)-[:HAS_CITY]->(t2:City)\n                            WHERE a.id < b.id \n                            WITH a, b, t1, t2,\n                                CASE \n                                    WHEN toLower(t1.value) = toLower(t2.value) THEN 1.0 \n                                    ELSE apoc.text.levenshteinSimilarity(toLower(t1.value), toLower(t2.value)) \n                                END AS sim_score\n                            WHERE sim_score >= $threshold\n                            MERGE (a)-[r:SIMILAR_TO]->(b)\n                            ON CREATE SET r.score = sim_score / 3, r.reasons = [$col]\n                            ON MATCH SET r.score = r.score + sim_score / 3, r.reasons = r.reasons + $col\n                        '
+2025-06-08 10:32:16,628 - INFO - Finished creating similarity edges for all columns
+2025-06-08 10:32:16,628 - INFO - Retrieving similarity edges from Neo4j
+2025-06-08 10:32:16,868 - INFO - Retrieved 55 similarity edges
+2025-06-08 10:32:16,868 - INFO - Applying graph global_threshold = 0.80
+2025-06-08 10:32:16,871 - INFO - Filtering graph matches with global_threshold=0.80
+2025-06-08 10:32:16,872 - INFO - After filtering: 6 edges remain
+2025-06-08 10:32:16,872 - INFO - Graph Matcher produced 6 matched pairs
+2025-06-08 10:32:16,872 - INFO - Writing Graph Matcher results to CSV at: output/graph_matcher.csv
+2025-06-08 10:32:16,873 - INFO - Saved Graph Matcher output successfully to output/graph_matcher.csv
+2025-06-08 10:32:16,873 - INFO - Closing Neo4j driver connection
+2025-06-08 10:32:16,874 - INFO - Matcher execution completed in 30.24 seconds
+2025-06-08 10:32:16,874 - INFO - Running simple ensemble (pre-advanced).
+2025-06-08 10:32:16,874 - INFO - Aggregation method: weighted_average, Threshold: 0.7500
+2025-06-08 10:32:16,874 - INFO - Matcher Weights: {'fuzzy_matcher': 0.4, 'spark_matcher': 0.3, 'graph_matcher': 0.3}
+2025-06-08 10:32:16,874 - INFO - Enabled fuzzy algorithms: ['levenshtein', 'jaro_winkler', 'token_set_ratio'], per-algo weight: 0.1333
+2025-06-08 10:32:16,874 - INFO - Fuzzy score columns found: ['levenshtein_score', 'jaro_winkler_score', 'token_set_ratio_score']
+2025-06-08 10:32:16,877 - INFO - Collected 13 unique record pairs from matcher outputs.
+2025-06-08 10:32:16,879 - INFO - Saved final ensembled pairs to output/final_results.csv (13 rows)
+2025-06-08 10:32:16,883 - INFO - Saved 13 LLM-input JSON lines to output/for_llm.jsonl
+2025-06-08 10:32:16,883 - INFO - Ensembling completed in 30.25 seconds
+2025-06-08 10:32:16,883 - INFO - Saved final ensembled pairs to output/final_results.csv (13 rows)
+2025-06-08 10:32:16,887 - INFO - Saved full summary report to output/report_summary.txt
+2025-06-08 10:32:16,887 - INFO - Running LLM Validation on final matched pairs...
+2025-06-08 10:32:19,451 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-08 10:32:21,180 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-08 10:32:22,299 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-08 10:32:23,370 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-08 10:32:24,492 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-08 10:32:25,535 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-08 10:32:26,826 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-08 10:32:26,830 - INFO - LLM validated results (JSON) written to: output/llm_validated_results.jsonl
+2025-06-08 10:32:26,832 - INFO - Successfully wrote flattened CSV to: output/llm_validated_results.csv
+2025-06-08 10:32:26,832 - INFO - LLM validated results (CSV) written to: output/llm_validated_results.csv
+2025-06-08 10:32:26,832 - INFO - LLM validation completed in 40.20 seconds
+2025-06-08 10:32:26,832 - INFO - Running Report Generation based on pipeline log...
+2025-06-08 10:32:26,832 - INFO - Parsing pipeline log: output/pipeline.log
+2025-06-08 10:32:26,833 - INFO - Initializing AzureChatOpenAI client with deployment: gpt-4o-mini
+2025-06-08 10:32:26,846 - INFO - Calling LLM to generate summary report
+2025-06-08 10:32:29,268 - INFO - HTTP Request: POST https://openai-datafabric-dev-001.openai.azure.com/openai/deployments/gpt-4o-mini/chat/completions?api-version=2024-02-01 "HTTP/1.1 200 OK"
+2025-06-08 10:32:29,271 - INFO - Received summary report from LLM
+2025-06-08 10:32:29,272 - INFO - Saved LLM summary report to: output/llm_summary_report.txt
+2025-06-08 10:32:29,272 - INFO - Report Generation completed in 42.64 seconds

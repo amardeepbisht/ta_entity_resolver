@@ -201,7 +201,13 @@ def run_graph_matcher(df: pd.DataFrame, config: dict) -> pd.DataFrame:
         loader.clear_database()
         loader.load_graph_batch(df, record_id_col, entity_cols)
         loader.create_similarity_edges(match_config, factor)
+
         matched_df = loader.get_similarity_edges()
+
+        logger.debug("Graph matcher config: %s", graph_cfg)
+        global_thresh = float(graph_cfg.get("global_threshold", 0.0))
+        logger.info("Applying graph global_threshold = %.2f", global_thresh)
+
         matched_df = matched_df.rename(columns={"score": "graph_score"})
         matched_df["score_type"] = "graph_score"
         matched_df["source"] = "graph_matcher"
@@ -214,8 +220,18 @@ def run_graph_matcher(df: pd.DataFrame, config: dict) -> pd.DataFrame:
         matched_df["record1_id"] = matched_df["record1_id"].astype(int)
         matched_df["record2_id"] = matched_df["record2_id"].astype(int)
 
-        logger.info("Graph Matcher produced %d matched pairs", len(matched_df))
+   
+        #added global threshold filtering
+        global_thresh = graph_cfg.get("global_threshold", 0.0)
+        if global_thresh > 0.0:
+            logger.info("Filtering graph matches with global_threshold=%.2f", global_thresh)
+            matched_df = matched_df[matched_df["graph_score"] >= global_thresh]
+            logger.info("After filtering: %d edges remain", len(matched_df))
+        matched_df["score_type"] = "graph_score"
+        matched_df["source"] = "graph_matcher"
 
+
+        logger.info("Graph Matcher produced %d matched pairs", len(matched_df))
 
         out_base = config["output"].get("graph_matcher_path", "output/graph_matcher.csv")
         logger.info("Writing Graph Matcher results to CSV at: %s", out_base)
