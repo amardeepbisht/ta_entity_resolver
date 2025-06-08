@@ -8,11 +8,11 @@
 - **Time Taken:** 0.0 seconds
 
 **Top Clusters:**
-- No clusters were formed during this analysis, indicating that there were no significant groupings of records identified.
+- No top clusters were identified during this analysis, as the data indicates that no clusters were formed.
 
 **Flags:**
 - **Low Confidence Clusters:** 0
 - **LLM Review Required:** 0
 
 **Recommendations:**
-Given the absence of matched pairs and clusters, it is recommended to review the data input for potential issues that may have affected the entity resolution process. Consider re-evaluating the matching criteria or enhancing the data quality to improve future runs. Continuous monitoring and adjustments may be necessary to ensure effective vendor entity resolution in subsequent analyses.
+Given the absence of matched pairs and clusters, it is recommended to review the data input for completeness and accuracy. Ensuring that the records contain sufficient information for effective entity resolution may enhance future analysis outcomes. Additionally, monitoring for any potential data quality issues could prevent similar occurrences in subsequent runs.
