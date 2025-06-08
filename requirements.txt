@@ -36,7 +36,7 @@ orjson==3.10.18
 packaging==24.2
 pandas==2.2.3
 pluggy==1.6.0
-py4j==0.10.9
+py4j==0.10.9.7
 pyarrow==20.0.0
 pydantic==2.11.5
 pydantic_core==2.33.2
