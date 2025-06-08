@@ -19,7 +19,7 @@ env/
 
 # pip/Egg packaging
 *.egg-info/
-dist/
+
 build/
 
 # output files 
