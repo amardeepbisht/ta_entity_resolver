@@ -2,7 +2,7 @@
 
 # --- Input and Output ---
 input:
-  path: sample_data/input/restaurants_100.csv #sample_data/input/sample_vendor_data.xlsx
+  path: sample_data/input/restaurants_25.csv #sample_data/input/sample_vendor_data.xlsx
   format: csv  #excel
   sheet_name: Sheet1
   delimiter: ","
@@ -52,7 +52,7 @@ matchers:
   use_phonetic: false
   use_ml_spark_matcher: false
   use_ml_zingg: false
-  use_graph: false
+  use_graph: true
 
 # --- Matching Technique Configuration ---
 matching_techniques_config:
@@ -61,7 +61,7 @@ matching_techniques_config:
       levenshtein: true
       jaro_winkler: true
       token_set_ratio: true
-    default_threshold: 0.85   #fallback similarity cutoff when a field does not specify its own threshold
+    default_threshold: 0.8   #fallback similarity cutoff when a field does not specify its own threshold
 
   phonetic_similarity:
     # Default algorithm (options: "soundex", "metaphone", "nysiis")
@@ -83,10 +83,10 @@ matching_techniques_config:
       - fuzzy
       - fuzzy
     fuzzy_thresholds:
-      - 0.7
-      - 0.7
-      - 1.0
-
+      - 0.8
+      - 0.8
+      - 0.8
+    global_threshold: 0.8   
 
   ml_based_spark_matcher:
     enabled: false
