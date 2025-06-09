@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 # Import Azure-specific chat model
 from langchain_openai import AzureChatOpenAI
 from langchain_core.messages import HumanMessage, SystemMessage
-from resolver_config.config_loader import load_config
+from ta_entity_resolver.resolver_config.config_loader import load_config
 
 
 
