@@ -1,6 +1,5 @@
 Total final pairs: 13
 
-All matched pairs (with all columns):
  record1_id  record2_id  final_score  is_match  levenshtein_score  jaro_winkler_score  token_set_ratio_score  graph_score
           1           2       0.9917      True             0.9855              0.9971                 0.9926       0.9855
           3           4       0.9090      True             0.8519              0.9704                 0.9048          NaN

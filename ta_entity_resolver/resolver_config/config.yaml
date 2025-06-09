@@ -172,9 +172,6 @@ llm_validation:
 
 
 
-# --- Data Processing Engine ---
+# --- Global Settings ---
 engine: pandas  # default is pandas, keep 'pyspark' for larger datasets
-
-
-# --- Logging ---
 logging_level: "INFO" # DEBUG, INFO, WARNING, ERROR, CRITICAL

@@ -4,9 +4,10 @@ import sys
 import os
 import importlib
 import logging
-from resolver_config.config_loader import load_config
-from preprocessor.preprocessor import preprocess_data
-from data_loader.load_data import load_input_data
+from ta_entity_resolver.resolver_config.config_loader import load_config
+from ta_entity_resolver.preprocessor.preprocessor import preprocess_data
+from ta_entity_resolver.data_loader.load_data import load_input_data
+
 
 logger = logging.getLogger(__name__)
 
@@ -41,7 +42,7 @@ def matcher_runner(df, config, engine="pyspark"):
             )
             continue
 
-        module_name = f"matchers.{tech}_matcher"
+        module_name = f"ta_entity_resolver.matchers.{tech}_matcher"
         func_name = f"run_{tech}_matcher"
         try:
             module = importlib.import_module(module_name)
@@ -72,7 +73,7 @@ def matcher_runner(df, config, engine="pyspark"):
         if engine != "pyspark":
             raise ValueError("ML Spark Matcher requires engine='pyspark'")
         try:
-            from matchers.ml_spark_matcher import run_ml_spark_matcher
+            from ta_entity_resolver.matchers.ml_spark_matcher import run_ml_spark_matcher
             logger.info("Running ML Spark Matcher...")
             df_spark = run_ml_spark_matcher(df, config)
             results["ml_spark_matcher"] = df_spark
@@ -82,7 +83,7 @@ def matcher_runner(df, config, engine="pyspark"):
     # 4. Handle Graph matcher (controlled purely by top-level flag)
     if matchers_conf.get("use_graph", False):
         try:
-            from matchers.graph_matcher import run_graph_matcher
+            from ta_entity_resolver.matchers.graph_matcher import run_graph_matcher
             logger.info("Running Graph Matcher...")
             df_graph = run_graph_matcher(df, config)
             results["graph_matcher"] = df_graph
